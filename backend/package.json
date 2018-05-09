@@ -1,0 +1,26 @@
+{
+  "name": "newshero",
+  "version": "1.0.0",
+  "description": "Recover news from the world and bring it to the people",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TurukTheCook/newshero.git"
+  },
+  "keywords": [
+    "news",
+    "infos",
+    "headlines",
+    "lastest",
+    "trending"
+  ],
+  "author": "Yoann Roulé",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TurukTheCook/newshero/issues"
+  },
+  "homepage": "https://github.com/TurukTheCook/newshero#readme"
+}
