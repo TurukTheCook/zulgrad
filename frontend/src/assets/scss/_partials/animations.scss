@@ -1,0 +1,17 @@
+// Fade In Out
+.fadeInOut-enter-active {
+  animation: fadeInOut ease-in-out .3s;
+}
+.fadeInOut-leave-active {
+  animation: fadeInOut ease-in-out .3s reverse;
+}
+
+@keyframes fadeInOut {
+  from {
+    opacity: 0;
+    transform: translateY(-25px)
+  }
+  to {
+    opacity: 1
+  }
+}

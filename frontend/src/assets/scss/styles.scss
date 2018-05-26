@@ -1,0 +1,24 @@
+// IMPORTS
+@import './_partials/general.scss';
+@import './_partials/animations.scss';
+@import './_components/welcome.scss';
+@import './_components/login_register.scss';
+
+// START HERE
+img[lazy='loaded'] {
+  opacity: 0;
+  animation-name: fadein;
+  animation-duration: .5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-direction: normal;
+  animation-timing-function: ease-out;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
