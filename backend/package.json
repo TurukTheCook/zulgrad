@@ -4,7 +4,7 @@
   "description": "Recover news from the world and bring it to the people",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.babel.js"
   },
   "repository": {
     "type": "git",

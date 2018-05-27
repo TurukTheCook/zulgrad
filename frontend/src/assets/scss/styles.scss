@@ -3,6 +3,7 @@
 @import './_partials/animations.scss';
 @import './_components/welcome.scss';
 @import './_components/login_register.scss';
+@import './_components/hello.scss';
 
 // START HERE
 img[lazy='loaded'] {
@@ -21,4 +22,16 @@ img[lazy='loaded'] {
       opacity: 1;
     }
   }
+}
+
+body {
+  height: 100vh
+}
+
+#app {
+  height: 100%
+}
+
+.container {
+  max-width: 940px
 }

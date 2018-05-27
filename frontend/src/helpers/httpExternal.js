@@ -2,14 +2,11 @@ import axios from 'axios'
 import app from './../main'
 import router from '../router';
 
-let http = axios.create({
-	baseURL: 'http://localhost:1407/api/'
-})
+let httpExternal = axios.create()
 
-http.interceptors.request.use(
+httpExternal.interceptors.request.use(
 	config => {
 		app.$Progress.start() // for every request start the progress
-		config.headers.Authorization = localStorage.getItem('token')
 		return config
 	},
 	error => {
@@ -17,17 +14,14 @@ http.interceptors.request.use(
 		return Promise.reject(error)
 })
 
-http.interceptors.response.use(
+httpExternal.interceptors.response.use(
 	response => {
 		app.$Progress.finish() // finish when a response is received
 		return response
 	},
 	error => {
 		app.$Progress.fail()
-		if (error.response.status == 403) {
-			router.push({ name: 'login' })
-		}
 		return Promise.reject(error)
 })
 
-export default http
+export default httpExternal
