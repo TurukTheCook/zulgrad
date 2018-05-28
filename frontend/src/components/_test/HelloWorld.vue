@@ -25,9 +25,11 @@
       <div class="news-container-inner d-flex flex-row mx-auto">
         <div class="news-side-menu show list-group mr-3 mb-3" id="navbarColor02">
           <div class="list-group-item bg-white text-primary">Modules</div>
-          <a href="#" class="list-group-item list-group-item-action">General</a>
-          <a href="#" class="list-group-item list-group-item-action">Sport</a>
-          <a href="#" class="list-group-item list-group-item-action">Technology</a>
+            <a href="#" class="list-group-item list-group-item-action pl-5">General</a>
+            <a href="#" class="list-group-item list-group-item-action pl-5">Sport</a>
+            <a href="#" class="list-group-item list-group-item-action pl-5">Technology</a>
+          <div class="list-group-item bg-white text-primary">History</div>
+          <div class="list-group-item bg-white text-primary">Favs</div>
         </div>
         <div class="news-main-content">
           <!-- <div class="alert alert-warning">Alert Warning...</div> -->
@@ -73,6 +75,7 @@ export default {
   name: "HelloWorld",
   data() {
     return {
+      modules: [],
       articles: [
         {
           source: { id: "google-news-fr", name: "Google News (France)" },

@@ -4,7 +4,6 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
-import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import morgan from 'morgan'
 import dotEnv from 'dotenv'
@@ -56,7 +55,7 @@ app.use(bodyParser.json())
  */
 let router = express.Router()
 
-router.use('/auth', auth)
+router.use(freeRoutes)
 router.use(verifyToken)
 
 app.use('/api', router)

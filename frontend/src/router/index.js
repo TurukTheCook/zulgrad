@@ -4,11 +4,15 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 // import comps from './components'
-const Welcome = () => import('@/components/Welcome')
-const Login = () => import('@/components/auth/Login')
-const Register = () => import('@/components/auth/Register')
-const HelloWorld = () => import('@/components/_test/HelloWorld')
-const test = () => import('@/components/_test/test')
+// const Welcome = () => import('@/components/Welcome')
+// const Login = () => import('@/components/auth/Login')
+// const Register = () => import('@/components/auth/Register')
+// const HelloWorld = () => import('@/components/_test/HelloWorld')
+// const test = () => import('@/components/_test/test')
+
+function loadComp(component) {
+  return () => import(/* webpackChunkName: "view-[request]" */ `@/components/${component}.vue`)
+}
 
 // ROUTES
 const router = new Router({
@@ -18,30 +22,30 @@ const router = new Router({
       path: '/',
       name: 'welcome',
       meta: { free: true },
-      component: Welcome
+      component: loadComp('Welcome')
     },
     {
       path: '/login',
       name: 'login',
       meta: { free: true },
-      component: Login
+      component: loadComp('auth/Login')
     },
     {
       path: '/register',
       name: 'register',
       meta: { free: true },
-      component: Register
+      component: loadComp('auth/Register')
     },
     {
       path: '/hello',
-      name: 'HelloWorld',
+      name: 'hello',
       meta: { free: true },
-      component: HelloWorld
+      component: loadComp('_test/HelloWorld')
     },
     {
       path: '/test',
       name: 'test',
-      component: test
+      component: loadComp('_test/test')
     },
     {
       path: '*',

@@ -5,15 +5,22 @@ import App from './App'
 import router from './router'
 import { SSL_OP_COOKIE_EXCHANGE } from 'constants'
 
-// CSS
-import '@/assets/css/bootstrap-superhero-custom.min.css'
+/**
+ * CSS IMPORTS
+ */
+import '@/assets/css/bootstrap-superhero.css'
 import '@/assets/scss/styles.scss'
 
-// JS
-import '../node_modules/jquery/dist/jquery'
+/**
+ * JS IMPORTS
+ */
+import '../node_modules/bootstrap.native/dist/bootstrap-native-v4'
+import '../node_modules/bootstrap.native/dist/polyfill'
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle'
 
-// PROGRESS BAR
+/**
+ * PROGRESS BAR
+ */
 import VueProgressBar from 'vue-progressbar'
 const options = {
   color: '#23f0ff',
@@ -30,15 +37,30 @@ const options = {
 }
 Vue.use(VueProgressBar, options)
 
-// LAZY-LOAD IMG
+/**
+ * LAZY-LOAD IMG
+ */
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload, {
   error: 'static/img/image_not_found.jpg',
-  loading: 'static/img/loading_icon.gif',
+  loading: 'static/img/loading_icon_compressed.gif',
   attempt: 1
 })
 
-// CONFIG
+/**
+ * LOADING COMPONENT
+ */
+Vue.component('loading', {
+  template: `
+  <div class="container-fluid d-flex justify-content-center">
+    <img src="static/img/Interwind-2s-200px-transparent.svg">
+  </div>
+  `
+})
+
+/**
+ * CONFIG
+ */
 // Vue.config.productionTip = false
 // Vue.config.productionTip = process.env.NODE_ENV === 'production'
 

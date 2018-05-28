@@ -1,7 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
-import User from './../models/users'
+import User from './../models/user'
 
 let verifyToken = (req, res, next) => {
   if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === process.env.AUTH_BEARER) {
