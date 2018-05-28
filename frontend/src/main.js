@@ -8,7 +8,7 @@ import { SSL_OP_COOKIE_EXCHANGE } from 'constants'
 /**
  * CSS IMPORTS
  */
-import '@/assets/css/bootstrap-superhero.css'
+import '@/assets/css/custom-css-bootstrap-magic.css'
 import '@/assets/scss/styles.scss'
 
 /**

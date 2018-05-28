@@ -1,28 +1,30 @@
 <template>
-  <div class="login d-flex flex-column align-items-center justify-content-center">
+  <div class="auth d-flex flex-column align-items-center bg-secondary">
     <loading v-if="loading"></loading>
-    <form v-else class="form-signin border shadow bg-dark" @submit.prevent="register">
-      <img class="img-fluid mb-4" v-lazy="registerBrand">
-      <h1 class="h3 mb-3 font-weight-normal cursor-default text-center">New user</h1>
-      <div class="form-group mb-2">
-        <label for="inputEmail">Email address</label>
-        <input v-model="newUser.email" type="email" id="inputEmail" class="form-control" required autofocus>
-        <small class="text-primary">Will be used to log you in</small>
-      </div>
-      <div class="form-group mb-2">
-        <label for="inputPassword">Password</label>
-        <input v-model="newUser.password" type="password" id="inputPassword" class="form-control" required>
-        <small class="text-primary">Must be longer than 8 characters</small>
-      </div>
-      <div class="form-group mb-5">
-        <label for="inputPasswordCheck">Confirm Password</label>
-        <input v-model="passwordCheck" type="password" id="inputPasswordCheck" class="form-control" required>
-        <small class="text-primary">Type your password again</small>
-      </div>
-      <div v-if="!success" class="alert alert-warning">{{message}}</div>
-      <button class="btn btn-lg btn-outline-primary btn-block" type="submit" :disabled="calling">Register</button>
-      <p class="mt-4 mb-3 text-center text-muted">Already have an account ? <router-link :to="{name: 'login'}">Sign in</router-link></p>
-    </form>
+    <div v-else class="form-auth text-white m-auto p-3">
+      <form @submit.prevent="register">
+        <img class="img-fluid mb-4" v-lazy="registerBrand">
+        <h1 class="h3 mb-3 font-weight-normal cursor-default text-center">New user</h1>
+        <div class="form-group mb-2">
+          <label for="inputEmail">Email address</label>
+          <input v-model="newUser.email" type="email" id="inputEmail" class="form-control" required autofocus>
+          <small class="text-primary">Will be used to log you in</small>
+        </div>
+        <div class="form-group mb-2">
+          <label for="inputPassword">Password</label>
+          <input v-model="newUser.password" type="password" id="inputPassword" class="form-control" required>
+          <small class="text-primary">Must be longer than 8 characters</small>
+        </div>
+        <div class="form-group mb-5">
+          <label for="inputPasswordCheck">Confirm Password</label>
+          <input v-model="passwordCheck" type="password" id="inputPasswordCheck" class="form-control" required>
+          <small class="text-primary">Type your password again</small>
+        </div>
+        <div v-if="!success" class="alert alert-warning m-0 mb-2 w-100">{{message}}</div>
+        <button class="btn btn-lg btn-outline-primary btn-block mb-2" type="submit" :disabled="calling">Register</button>
+        <p class="text-center text-muted">Already have an account ? <router-link :to="{name: 'login'}">Sign in</router-link></p>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -68,7 +70,7 @@ export default {
               },
               newUser
             };
-
+            console.log('data', data.countryContinent)
             http.post('signup', data)
               .then(res => {
                 this.$router.push({ name: 'login' })

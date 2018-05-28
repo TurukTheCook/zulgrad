@@ -1,0 +1,11 @@
+.auth {
+  min-height: 100vh
+}
+
+.form-auth {
+  width: 100%;
+  max-width: 450px;
+  & img {
+    width: 100%
+  }
+}

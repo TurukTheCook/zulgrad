@@ -1,35 +1,42 @@
 <template>
   <div class="news-container d-flex flex-column">
-    <nav class="navbar sticky-top navbar-expand navbar-dark mb-2">
+    <nav class="navbar sticky-top navbar-expand-sm navbar-dark bg-dark mb-2">
       <div class="container border-bottom">
-        <button class="navbar-toggler mb-1 mr-2 d-block" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <router-link class="navbar-brand mb-1 mr-auto" to="/">Zulgrad <small class="text-muted">The News Bringer</small></router-link>
-        <div >
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-              <router-link class="nav-link" to="/hello">Home</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/profile">Profile</router-link>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="" v-on:click.prevent="logout">Logout</a>
-            </li>
-          </ul>
-        </div>
+        <router-link class="navbar-brand text-primary mb-1" to="/">Zulgrad <small class="text-muted">The News Bringer</small></router-link>
+          <button class="navbar-toggler mb-1 mr-2" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="navbar-collapse collapse" id="navbarColor02">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <router-link class="nav-link" to="/hello">Home</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/profile">Profile</router-link>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="" v-on:click.prevent="logout">Logout</a>
+              </li>
+            </ul>
+          </div>
       </div>
     </nav>
     <main class="container d-flex my-3">
       <div class="news-container-inner d-flex flex-row mx-auto">
-        <div class="news-side-menu show list-group mr-3 mb-3" id="navbarColor02">
-          <div class="list-group-item bg-white text-primary">Modules</div>
-            <a href="#" class="list-group-item list-group-item-action pl-5">General</a>
-            <a href="#" class="list-group-item list-group-item-action pl-5">Sport</a>
-            <a href="#" class="list-group-item list-group-item-action pl-5">Technology</a>
-          <div class="list-group-item bg-white text-primary">History</div>
-          <div class="list-group-item bg-white text-primary">Favs</div>
+        <div class="news-side-menu show list-group mr-3 mb-3">
+          <div class="list-group-item bg-dark text-primary">Modules</div>
+          <div class="list-group-div d-flex flex-column">
+            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">General</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">Sport</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">Technology test uno dos</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
+          </div>
+          <div class="list-group-item bg-dark text-primary">History</div>
+          <div class="list-group-item bg-dark text-primary">Favs</div>
         </div>
         <div class="news-main-content">
           <!-- <div class="alert alert-warning">Alert Warning...</div> -->
@@ -38,29 +45,15 @@
             <li class="breadcrumb-item"><a href="#">Library</a></li>
             <li class="breadcrumb-item active">Data</li>
           </ol>
-          <div v-for="article in articles" class="news-card d-flex flex-column bg-white text-dark border shadow mb-3">
-            <h5 class="news-card-header py-1 px-3"><strong>{{article.title}}</strong></h5>
-            <div class="news-card-content d-flex flex-row">
-              <div class="news-card-content-image pt-2 mb-2">
-                <img class="img-fluid border" v-lazy="article.urlToImage" alt="news related image">
-              </div>
-              <div class="news-card-content-body px-2 pb-2">
-                <p class="mb-1">{{article.description}}</p>
-                <div class="float-left">
-                  <small class="pl-2"><cite title="Author">{{article.author}}</cite> @ <cite title="Source Title">{{article.source.name}}</cite></small><br>
-                  <small class="pl-2">{{moment(article.publishedAt)}}</small>
-                </div>
-                <button @click="openLink(article.url)" class="btn btn-sm btn-outline-primary float-right">Read..</button>
-              </div>
-            </div>
-          </div>
+          <!-- TO DO -->
+          <news-articles :articles="articles"></news-articles>
         </div>
       </div>
     </main>
-    <footer class="footer bg-black text-center pb-3 px-3">
-      <div class="container border-top pt-2">
-        <h6 style="float: left">Zulgrad " The News Bringer " - Copyright 2018</h6>
-        <p class="text-right mb-0" style="float: right">
+    <footer class="text-white bg-dark">
+      <div class="container d-flex flex-column flex-sm-row justify-content-between p-2">
+        <p>Zulgrad "The News Bringer" - Copyright 2018</p>
+        <p>
           - News delivered by <a href="https://newsapi.org/" target="_blank">NewsAPI</a><br>
           - Cryptocurrencies prices delivered by <a href="https://coinmarketcap.com/" target="_blank">CoinMarketCap</a>
         </p>
@@ -70,9 +63,20 @@
 </template>
 
 <script>
-import moment from "moment-timezone";
+import LoadingComponent from './../LoadingComponent'
+import ErrorComponent from './../ErrorComponent'
+
 export default {
   name: "HelloWorld",
+  components: {
+    'news-articles' : () => ({
+      component: import('./../modules/NewsArticles'),
+      loading: LoadingComponent,
+      error: ErrorComponent,
+      delay: 10,
+      timeout: 15000
+    })
+  },
   data() {
     return {
       modules: [],
@@ -202,16 +206,9 @@ export default {
           publishedAt: "2018-05-25T15:20:16+00:00"
         }
       ]
-    };
+    }
   },
   methods: {
-    moment(date) {
-      let timezone = moment.tz.guess()
-      return moment.tz(date, timezone).format("MMMM Do YYYY [at] HH:mm");
-    },
-    openLink(url) {
-      window.open(url, "_blank")
-    },
     logout() {
       localStorage.removeItem('X-Token');
       this.$router.push({name: 'welcome'})
