@@ -24,12 +24,8 @@ img[lazy='loaded'] {
   }
 }
 
-body {
-  min-height: 100vh
-}
-
-#app {
-  height: 100%
+body, #app {
+  min-height: 100vh;
 }
 
 .container {

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-for="article in articles" class="news-card d-flex flex-column bg-white text-dark border shadow mb-3">
+  <div v-for="article in articles" :key="article._id" class="news-card d-flex flex-column bg-white text-dark border shadow mb-3">
     <h5 class="news-card-header py-1 px-3"><strong>{{article.title}}</strong></h5>
     <div class="news-card-content d-flex flex-row">
       <div class="news-card-content-image pt-2 mb-2">

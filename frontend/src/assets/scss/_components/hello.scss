@@ -1,5 +1,5 @@
 .news-container {
-  min-height: 100%;
+  min-height: 100%
 }
 
 .news-card-content {
@@ -24,13 +24,21 @@
   max-width: 650px
 }
 
-.navbar {
-  background-color: #2b3e50
+// .navbar {
+//   background-color: #2b3e50
+// }
+
+#sidemenu {
+  width: 100%;
+  max-width: 200px;
 }
 
-.news-side-menu {
-  width: 100%;
-  max-width: 200px
+.modules-link {
+  flex: 1
+}
+
+.modules-add:hover {
+  color: #20c997 !important
 }
 
 @media all and (max-width: 650px) {
@@ -43,33 +51,41 @@
   .news-container-inner {
     flex-direction: column !important;
   }
-  .news-side-menu {
-    margin-right: 0 !important;
+
+  #sidemenu {
     max-width: 100%;
-    & .list-group-div {
-      flex-direction: row !important;
-      flex-wrap: wrap !important;
-    }
-    & .list-group-item-action {
-      height: 70px;
-      min-width: 120px;
-      flex: 1;
-      padding: 1rem !important;
-      margin-bottom: 0
-    }
+    position: fixed;
+    top: 60px;
+    left: 0;
+    z-index: 50
   }
+  // .news-side-menu {
+  //   margin-right: 0 !important;
+  //   max-width: 100%;
+  //   & .list-group-div {
+  //     flex-direction: row !important;
+  //     flex-wrap: wrap !important;
+  //   }
+  //   & .list-group-item-action {
+  //     height: 70px;
+  //     min-width: 120px;
+  //     flex: 1;
+  //     padding: 1rem !important;
+  //     margin-bottom: 0
+  //   }
+  // }
 }
 
 @media all and (max-width: 460px) {
+  .navbar-brand > small {
+    display: none
+  }
   .news-card-content {
     flex-direction: column !important;
   }
 }
 
 @media all and (max-width: 320px) {
-  .navbar-brand > small {
-    display: none
-  }
   .news-side-menu {
     & .list-group-div {
       flex-direction: column !important;

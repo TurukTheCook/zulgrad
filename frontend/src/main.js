@@ -42,8 +42,8 @@ Vue.use(VueProgressBar, options)
  */
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload, {
-  error: 'static/img/image_not_found.jpg',
-  loading: 'static/img/loading_icon_compressed.gif',
+  error: '/static/img/image_not_found.jpg',
+  loading: '/static/img/loading_icon_compressed.gif',
   attempt: 1
 })
 
@@ -53,10 +53,55 @@ Vue.use(VueLazyload, {
 Vue.component('loading', {
   template: `
   <div class="container-fluid d-flex justify-content-center">
-    <img src="static/img/Interwind-2s-200px-transparent.svg">
+    <img src="/static/img/Interwind-2s-200px-transparent.svg">
   </div>
   `
 })
+
+/**
+ * FONT-AWESOME-VUE
+ */
+import fontawesome from '@fortawesome/fontawesome'
+import {
+  faAngleDown,
+  faDoorOpen,
+  faInfoCircle,
+  faPlusCircle,
+  faPortrait,
+  faPenSquare,
+  faTrash,
+  faTags,
+  faStar,
+  faCubes,
+  faClock,
+  faHome, 
+  faCopyright,
+  faUnlockAlt,
+  faEnvelope,
+  faAt,
+  faUserAstronaut,
+  faUserNinja} from '@fortawesome/fontawesome-free-solid'
+ 
+fontawesome.library.add(
+  faAngleDown,
+  faDoorOpen,
+  faInfoCircle,
+  faPlusCircle,
+  faPortrait,
+  faPenSquare,
+  faTrash,
+  faTags,
+  faStar,
+  faCubes,
+  faClock,
+  faHome,
+  faCopyright,
+  faUnlockAlt,
+  faEnvelope,
+  faAt,
+  faUserAstronaut,
+  faUserNinja
+)
 
 /**
  * CONFIG

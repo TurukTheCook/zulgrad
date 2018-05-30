@@ -4,19 +4,19 @@
     <div v-else class="form-auth text-white m-auto p-3">
       <form @submit.prevent="register">
         <img class="img-fluid mb-4" v-lazy="registerBrand">
-        <h1 class="h3 mb-3 font-weight-normal cursor-default text-center">New user</h1>
+        <h1 class="h3 mb-3 font-weight-normal cursor-default text-center"><font-awesome-icon icon="user-astronaut"/> New user</h1>
         <div class="form-group mb-2">
-          <label for="inputEmail">Email address</label>
+          <label for="inputEmail"><font-awesome-icon icon="envelope"/> Email address</label>
           <input v-model="newUser.email" type="email" id="inputEmail" class="form-control" required autofocus>
           <small class="text-primary">Will be used to log you in</small>
         </div>
         <div class="form-group mb-2">
-          <label for="inputPassword">Password</label>
+          <label for="inputPassword"><font-awesome-icon icon="unlock-alt"/> Password</label>
           <input v-model="newUser.password" type="password" id="inputPassword" class="form-control" required>
           <small class="text-primary">Must be longer than 8 characters</small>
         </div>
         <div class="form-group mb-5">
-          <label for="inputPasswordCheck">Confirm Password</label>
+          <label for="inputPasswordCheck"><font-awesome-icon icon="unlock-alt"/> Confirm Password</label>
           <input v-model="passwordCheck" type="password" id="inputPasswordCheck" class="form-control" required>
           <small class="text-primary">Type your password again</small>
         </div>
@@ -32,9 +32,13 @@
 import axios from 'axios';
 import http from '../../helpers/http'
 // import adapter from 'axios/lib/adapters/xhr';
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 
 export default {
   name: 'Register',
+  components: {
+    FontAwesomeIcon
+  },
   data() {
     return {
       registerBrand: 'static/img/zulgrad-register-compressed.jpg',

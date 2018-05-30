@@ -1,73 +1,23 @@
 <template>
-  <div class="news-container d-flex flex-column">
-    <nav class="navbar sticky-top navbar-expand-sm navbar-dark bg-dark mb-2">
-      <div class="container border-bottom">
-        <router-link class="navbar-brand text-primary mb-1" to="/">Zulgrad <small class="text-muted">The News Bringer</small></router-link>
-          <button class="navbar-toggler mb-1 mr-2" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="navbar-collapse collapse" id="navbarColor02">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                <router-link class="nav-link" to="/hello">Home</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link class="nav-link" to="/profile">Profile</router-link>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="" v-on:click.prevent="logout">Logout</a>
-              </li>
-            </ul>
-          </div>
-      </div>
-    </nav>
-    <main class="container d-flex my-3">
-      <div class="news-container-inner d-flex flex-row mx-auto">
-        <div class="news-side-menu show list-group mr-3 mb-3">
-          <div class="list-group-item bg-dark text-primary">Modules</div>
-          <div class="list-group-div d-flex flex-column">
-            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">General</a>
-            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">Sport</a>
-            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">Technology test uno dos</a>
-            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
-            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
-            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
-            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
-            <a href="#" class="list-group-item list-group-item-action bg-light pl-5">test</a>
-          </div>
-          <div class="list-group-item bg-dark text-primary">History</div>
-          <div class="list-group-item bg-dark text-primary">Favs</div>
-        </div>
-        <div class="news-main-content">
-          <!-- <div class="alert alert-warning">Alert Warning...</div> -->
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Library</a></li>
-            <li class="breadcrumb-item active">Data</li>
-          </ol>
-          <!-- TO DO -->
-          <news-articles :articles="articles"></news-articles>
-        </div>
-      </div>
-    </main>
-    <footer class="text-white bg-dark">
-      <div class="container d-flex flex-column flex-sm-row justify-content-between p-2">
-        <p>Zulgrad "The News Bringer" - Copyright 2018</p>
-        <p>
-          - News delivered by <a href="https://newsapi.org/" target="_blank">NewsAPI</a><br>
-          - Cryptocurrencies prices delivered by <a href="https://coinmarketcap.com/" target="_blank">CoinMarketCap</a>
-        </p>
-      </div>
-    </footer>
-  </div>
+<div>
+  <!-- <div class="alert alert-warning">Alert Warning...</div> -->
+  <!-- <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item"><a href="#">Library</a></li>
+    <li class="breadcrumb-item active">Data</li>
+  </ol> -->
+  <!-- TO DO -->
+  <news-articles :articles="articles"></news-articles>
+</div>
 </template>
 
 <script>
 import LoadingComponent from './../LoadingComponent'
 import ErrorComponent from './../ErrorComponent'
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 
 export default {
-  name: "HelloWorld",
+  name: 'Modules',
   components: {
     'news-articles' : () => ({
       component: import('./../modules/NewsArticles'),
@@ -75,11 +25,11 @@ export default {
       error: ErrorComponent,
       delay: 10,
       timeout: 15000
-    })
+    }),
+    FontAwesomeIcon
   },
   data() {
     return {
-      modules: [],
       articles: [
         {
           source: { id: "google-news-fr", name: "Google News (France)" },
@@ -207,12 +157,6 @@ export default {
         }
       ]
     }
-  },
-  methods: {
-    logout() {
-      localStorage.removeItem('X-Token');
-      this.$router.push({name: 'welcome'})
-    }
   }
-};
+}
 </script>

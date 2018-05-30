@@ -37,10 +37,30 @@ const router = new Router({
       component: loadComp('auth/Register')
     },
     {
-      path: '/hello',
-      name: 'hello',
-      meta: { free: true },
-      component: loadComp('_test/HelloWorld')
+      path: '/home',
+      component: loadComp('home/Home'),
+      children: [
+        {
+          path: '',
+          name: 'modules',
+          component: loadComp('home/Modules')
+        },
+        {
+          path: '/profile',
+          name: 'profile',
+          component: loadComp('home/Profile')
+        },
+        {
+          path: '/history',
+          name: 'history',
+          component: loadComp('home/History')
+        },
+        {
+          path: '/favs',
+          name: 'favs',
+          component: loadComp('home/Favs')
+        }
+      ]
     },
     {
       path: '/test',
@@ -59,7 +79,7 @@ const router = new Router({
 // Ici on verifie que l'utilisateur dispose d'un token valide
 router.beforeEach((to, from, next) => {
   if (!to.matched.some(record => record.meta.free)) {
-    if (!localStorage.getItem('token') && to.path !== '/welcome') {
+    if (!localStorage.getItem('X-Token') && to.path !== '/welcome') {
       next('/welcome')
     } else {
       next()
