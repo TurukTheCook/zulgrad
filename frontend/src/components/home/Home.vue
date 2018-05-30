@@ -1,5 +1,8 @@
 <template>
-  <div class="news-container d-flex flex-column">
+<div>
+  <loading v-if="(loading && success)"></loading>
+  <div v-if="!success" class="alert alert-danger m-0 mb-2 w-100">{{message}}</div>
+  <div v-if="!loading" class="news-container d-flex flex-column">
     <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark mb-2">
       <div class="container border-bottom">
           <button class="navbar-toggler mb-1" type="button" data-toggle="collapse" data-target="#sidemenu" aria-controls="sidemenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,10 +68,12 @@
       </div>
     </footer>
   </div>
+</div>
 </template>
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import http from '@/helpers/http'
 
 export default {
   name: "Home",
@@ -77,6 +82,9 @@ export default {
   },
   data() {
     return {
+      loading: true,
+      success: true,
+      message: null,
       modules: []
     }
   },
@@ -85,6 +93,21 @@ export default {
       localStorage.removeItem('X-Token');
       this.$router.push({name: 'welcome'})
     }
+  },
+  created() {
+    http.get('modules')
+    .then(res => {
+      this.loading = false
+      this.modules = res.data.content
+    })
+    .catch(err => {
+      this.loading = true
+      this.success = err.response.data.success
+      this.message = err.response.data.message
+      setTimeout(() => {
+        this.$router.push({name: 'login'})
+      },3000)
+    })
   }
 };
 </script>

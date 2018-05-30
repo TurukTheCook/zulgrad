@@ -3,13 +3,13 @@ import app from './../main'
 import router from '../router';
 
 let http = axios.create({
-	baseURL: 'http://localhost:1407/api/'
+	baseURL: process.env.API_ADDRESS
 })
 
 http.interceptors.request.use(
 	config => {
 		app.$Progress.start() // for every request start the progress
-		config.headers.Authorization = localStorage.getItem('token')
+		config.headers.Authorization = localStorage.getItem('X-Token')
 		return config
 	},
 	error => {

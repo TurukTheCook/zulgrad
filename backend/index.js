@@ -16,8 +16,8 @@ dotEnv.config()
 /**
  * Routes Imports
  */
-import freeRoutes from './components/routes/_freeRoutes'
-import routes from './components/routes'
+import freeRoutes from './components/routes/free'
+import NotFreeRoutes from './components/routes/notFree'
 
 /**
  * Middleware Imports
@@ -57,6 +57,7 @@ let router = express.Router()
 
 router.use(freeRoutes)
 router.use(verifyToken)
+router.use(NotFreeRoutes)
 
 app.use('/api', router)
 

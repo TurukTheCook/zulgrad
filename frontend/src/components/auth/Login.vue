@@ -34,7 +34,7 @@ export default {
     return {
       loginBrand: 'static/img/zulgrad-login-compressed.jpg',
       calling: false,
-      loading: false,
+      loading: true,
       success: true,
       message: null,
       passwordCheck: null,
@@ -46,7 +46,7 @@ export default {
       this.loading = true
       http.post('login', this.logAttempt)
         .then(res => {
-          localStorage.setItem('X-Token', 'this is a token')
+          localStorage.setItem('X-Token', res.data.content)
           this.$router.push({ name: 'modules' })
         })
         .catch(err => {
@@ -56,6 +56,9 @@ export default {
           this.message = err.response.data.message
         })
     }
+  },
+  beforeMount() {
+    this.loading = false
   }
 }
 </script>

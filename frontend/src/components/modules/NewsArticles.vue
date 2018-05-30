@@ -21,6 +21,7 @@
 
 <script>
 import moment from "moment-timezone";
+
 export default {
   name: 'NewsArticles',
   props: {

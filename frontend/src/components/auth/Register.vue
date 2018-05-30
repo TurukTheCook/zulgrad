@@ -43,7 +43,7 @@ export default {
     return {
       registerBrand: 'static/img/zulgrad-register-compressed.jpg',
       calling: false,
-      loading: false,
+      loading: true,
       success: true,
       message: null,
       passwordCheck: null,
@@ -93,6 +93,9 @@ export default {
           })
       }
     }
+  },
+  beforeMount() {
+    this.loading = false
   }
 }
 </script>

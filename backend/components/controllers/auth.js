@@ -22,7 +22,7 @@ export default {
         else {
           jwt.sign({email: user.email, _id: user._id}, process.env.SECRET_KEY, (err, result) => {
             if (err) res.status(500).json({success: false, message: err.message})
-            else res.status(200).json({success: true, message: 'Welcome!', content: { token: process.env.AUTH_BEARER + ' ' + result }})
+            else res.status(200).json({success: true, message: 'Welcome!', content: process.env.AUTH_BEARER + ' ' + result })
           })
         }
       })
