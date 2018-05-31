@@ -66,15 +66,18 @@ export default {
           .then(res => {
             let newUser = this.newUser
             let data = {
-              countryContinent: {
-                countryCode: res.data.country_code,
-                countryName: res.data.country_name,
-                continentCode: res.data.continent_code,
-                continentName: res.data.continent_name
+              country: { 
+                code: res.data.country_code,
+                name: res.data.country_name
+              },
+              continent: {
+                code: res.data.continent_code,
+                name: res.data.continent_name
               },
               newUser
             };
-            console.log('data', data.countryContinent)
+            console.log('country: ', data.country)
+            console.log('continent: ', data.continent)
             http.post('signup', data)
               .then(res => {
                 this.$router.push({ name: 'login' })
@@ -86,11 +89,12 @@ export default {
                 this.message = err.response.data.message
               })
           })
-          .catch(err => {
-            console.log(err)
-            this.calling = false
-            this.loading = false
-          })
+          // Do not catch so registration keep going even if external api is down
+          // .catch(err => {
+          //   console.log(err)
+          //   this.calling = false
+          //   this.loading = false
+          // })
       }
     }
   },

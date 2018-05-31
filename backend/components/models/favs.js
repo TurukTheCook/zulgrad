@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 let FavsSchema = new mongoose.Schema(
   {
-    favs: { type: [], default: undefined }
+    favs: []
   },
   { timestamps: true }
 );

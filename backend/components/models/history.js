@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 let HistorySchema = new mongoose.Schema(
   {
-    history: { type: [], default: undefined }
+    history: []
   },
   { timestamps: true }
 );

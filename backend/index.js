@@ -16,8 +16,8 @@ dotEnv.config()
 /**
  * Routes Imports
  */
-import freeRoutes from './components/routes/free'
-import NotFreeRoutes from './components/routes/notFree'
+import auth from './components/routes/auth'
+import api from './components/routes/api'
 
 /**
  * Middleware Imports
@@ -51,16 +51,11 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 /**
- * ROUTER PREFIX, AUTH VERIFICATION, 404 REDIRECT
+ * API PREFIX, AUTH VERIFICATION, 404 REDIRECT
  */
-let router = express.Router()
-
-router.use(freeRoutes)
-router.use(verifyToken)
-router.use(NotFreeRoutes)
-
-app.use('/api', router)
-
+app.use('/api', auth)
+app.use(verifyToken)
+app.use(api)
 app.use('/*', (req, res) => {
   res.status(404).json({ success: false, message: 'This route does not exists.'})
 })
