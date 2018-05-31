@@ -35,14 +35,11 @@
               </div>
               <div id="modules" class="collapse show">
                 <ul class="nav flex-column bg-white pl-3">
-                  <li class="nav-item">
-                    <a class="nav-link active" href="#">mod 1</a>
+                  <li v-if="modules[0]" v-for="item in modules" :key="item.name" class="nav-item">
+                    <a class="nav-link active" href="#">{{item.name}}</a>
                   </li>
-                  <li class="nav-item ">
-                    <a class="nav-link" href="#">mod 2</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">mod 3</a>
+                  <li v-if="!modules[0]" class="nav-item">
+                    <small>You have no modules..</small>
                   </li>
                 </ul>
               </div>
@@ -99,6 +96,7 @@ export default {
     .then(res => {
       this.loading = false
       this.modules = res.data.content
+      console.log('modules: ', this.modules)
     })
     .catch(err => {
       this.loading = true

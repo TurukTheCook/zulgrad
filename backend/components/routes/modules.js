@@ -1,9 +1,11 @@
 import express from 'express'
-import modulesController from './../controllers/modules'
+import modules from './../controllers/modules'
 
 let router = express.Router()
 
 router.route('/modules')
-  .get(modulesController.getMine)
+  .get(modules.read)
+  .post(modules.add)
+  .delete(modules.delete)
 
 export default router

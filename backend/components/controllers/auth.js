@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import helper from './../helpers';
 import User from '../models/user'
-import Modules from '../models/modules'
+import ModulesList from '../models/modulesList'
 import Stats from '../models/stats'
 import History from '../models/history'
 import Favs from '../models/favs'
@@ -13,7 +13,7 @@ import Country from '../models/country'
 
 export default {
   /*
-  *    LOGIN
+  * LOGIN
   */
   login(req, res) {
     if (req.body.email && req.body.password) {
@@ -45,25 +45,25 @@ export default {
     } else res.status(412).json({success: false, message: 'Email and/or password are missing..'})
   },
   /*
-  *   REGISTER
+  * REGISTER
   */
   signup(req, res) {
     let bodyUser = req.body.newUser
     let bodyContinent = undefined
     let bodyCountry = undefined
-    bodyContinent = {code: 'NA', name: 'MURICA'}
-    bodyCountry = {code: 'CA', name: 'NOTMURICA'}
+    bodyContinent = req.body.continent
+    bodyCountry = req.body.country
 
     if (bodyUser && bodyUser.email && bodyUser.password) {
       User.findOne({ email: helper.caseInsensitive(bodyUser.email) }, (err, result) => {
         if (!result) {
           let newUser = new User(bodyUser)
-          let newModules = new Modules
+          let newModulesList = new ModulesList
           let newStats = new Stats
           let newHistory = new History
           let newFavs = new Favs
           newUser.password = bcrypt.hashSync(bodyUser.password, 12)
-          newUser.modules = newModules._id
+          newUser.modulesList = newModulesList._id
           newUser.stats = newStats._id
           newUser.history = newHistory._id
           newUser.favs = newFavs._id
@@ -95,7 +95,7 @@ export default {
               })
             }
 
-            let ccCheck = async () => {
+            let geoCheck = async () => {
               let results = {
                 continent: await continentPromise(),
                 country: await countryPromise()
@@ -103,8 +103,8 @@ export default {
               return results
             }
 
-            ccCheck().then(results => {
-              let savesArray = [newModules, newStats, newHistory, newFavs, newUser, global[0]]
+            geoCheck().then(results => {
+              let savesArray = [newModulesList, newStats, newHistory, newFavs, newUser, global[0]]
 
               if (results.continent != 'nobody') {
                 if (results.continent) results.continent.counter++

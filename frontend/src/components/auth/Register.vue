@@ -76,8 +76,6 @@ export default {
               },
               newUser
             };
-            console.log('country: ', data.country)
-            console.log('continent: ', data.continent)
             http.post('signup', data)
               .then(res => {
                 this.$router.push({ name: 'login' })
