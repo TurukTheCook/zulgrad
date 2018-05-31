@@ -1,19 +1,30 @@
+/**
+ * --- IMPORTS STANDARD
+ */
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import helper from './../helpers';
-import User from '../models/user'
-import ModulesList from '../models/modulesList'
-import Stats from '../models/stats'
-import History from '../models/history'
-import Favs from '../models/favs'
-import GlobalStats from '../models/globalStats'
-import Continent from '../models/continent'
-import Country from '../models/country'
 
+/**
+ * --- IMPORTS MODELS
+ */
+import GlobalStats from '../models/stats/globalStats'
+import Continent from '../models/stats/continent'
+import Country from '../models/stats/country'
+
+import User from '../models/user/user'
+import Stats from '../models/user/stats'
+import ModulesList from '../models/user/modulesList'
+import HistoryList from '../models/user/historyList'
+import FavsList from '../models/user/favsList'
+
+/**
+ * --- EXPORT
+ */
 export default {
   /*
-  * LOGIN
+  * --- LOGIN
   */
   login(req, res) {
     if (req.body.email && req.body.password) {
@@ -45,7 +56,7 @@ export default {
     } else res.status(412).json({success: false, message: 'Email and/or password are missing..'})
   },
   /*
-  * REGISTER
+  * --- REGISTER
   */
   signup(req, res) {
     let bodyUser = req.body.newUser
@@ -58,15 +69,15 @@ export default {
       User.findOne({ email: helper.caseInsensitive(bodyUser.email) }, (err, result) => {
         if (!result) {
           let newUser = new User(bodyUser)
-          let newModulesList = new ModulesList
           let newStats = new Stats
-          let newHistory = new History
-          let newFavs = new Favs
+          let newModulesList = new ModulesList
+          let newHistoryList = new HistoryList
+          let newFavsList = new FavsList
           newUser.password = bcrypt.hashSync(bodyUser.password, 12)
-          newUser.modulesList = newModulesList._id
           newUser.stats = newStats._id
-          newUser.history = newHistory._id
-          newUser.favs = newFavs._id
+          newUser.modulesList = newModulesList._id
+          newUser.historyList = newHistoryList._id
+          newUser.favsList = newFavsList._id
 
           GlobalStats.find({}, (err, global) => {
             if (err) return res.status(500).json({success: false, message: err.message})
@@ -104,7 +115,7 @@ export default {
             }
 
             geoCheck().then(results => {
-              let savesArray = [newModulesList, newStats, newHistory, newFavs, newUser, global[0]]
+              let savesArray = [newModulesList, newStats, newHistoryList, newFavsList, newUser, global[0]]
 
               if (results.continent != 'nobody') {
                 if (results.continent) results.continent.counter++

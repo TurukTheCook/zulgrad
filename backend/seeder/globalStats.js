@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import GlobalStats from '../components/models/globalStats'
+import GlobalStats from '../components/models/stats/globalStats'
 
 mongoose.connect('mongodb://localhost:27017/newshero', {}, (err) => {
     if (err) { throw err; }

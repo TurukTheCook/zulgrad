@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
+import ModuleSchema from '../../schemas/module'
 
 let ModulesListSchema = new mongoose.Schema(
   {
-    modules: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Module'}]
+    modules: [ModuleSchema]
   },
   { timestamps: true }
 );

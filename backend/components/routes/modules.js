@@ -6,6 +6,8 @@ let router = express.Router()
 router.route('/modules')
   .get(modules.read)
   .post(modules.add)
-  .delete(modules.delete)
+
+router.route('/modules/:id')
+  .delete(modules.del)
 
 export default router

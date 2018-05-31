@@ -1,14 +1,14 @@
-let helper = {
-  caseInsensitive: (word) => {
+export default {
+  caseInsensitive(word) {
     return { $regex: new RegExp('^' + word + '$', 'i') }
   },
-  beforeSend: (data) => {
+  beforeSend(data) {
     data.__v = undefined
+    data.createdAt = undefined
+    data.updatedAt = undefined
   },
-  beforeSendUser: (data) => {
-    helper.beforeSend(data)
+  beforeSendUser(data) {
+    data.__v = undefined
     data.password = undefined
   }
 }
-
-export default helper

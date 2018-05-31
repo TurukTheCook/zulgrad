@@ -6,8 +6,8 @@ let UserSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     modulesList: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'ModulesList' },
-    history: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'History' },
-    favs: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Favs' },
+    historyList: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'HistoryList' },
+    favsList: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'FavsList' },
     stats: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Stats' }
   },
   { timestamps: true }
