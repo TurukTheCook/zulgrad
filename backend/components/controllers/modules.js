@@ -17,12 +17,13 @@ import ModulesList from '../models/user/modulesList'
  */
 export default {
   /*
-  * --- READ
+  * --- READ ALL
   */
-  read(req, res) {
+  readAll(req, res) {
     User.findOne({_id: res.locals.user._id}).populate({path: 'modulesList', populate: {path: 'modules'}}).exec()
       .then(user => {
-        if (!user.modulesList.modules) return res.status(404).json({ success: false, message: 'Problem with retrieving modules..' })
+        // console.log(user.modulesList.modules)
+        // if (!user.modulesList.modules) return res.status(404).json({ success: false, message: 'Problem with retrieving modules..' })
         
         let mods = []
         let data = {
@@ -42,6 +43,21 @@ export default {
         res.status(500).json({ success: false, message: err.message })
       })
   },
+
+  /**
+   * --- READ ONE
+   */
+  readOne(req, res) {
+    User.findOne({_id: res.locals.user._id}).populate({path: 'modulesList', populate: {path: 'modules'}}).exec()
+      .then(user => {
+        let doc = user.modulesList.modules.id(req.params.id)
+        res.status(200).json({success: true, content: doc})
+      })
+      .catch(err => {
+        res.status(500).json({ success: false, message: err.message })
+      })
+  },
+
   /**
    * --- ADD
    */
@@ -68,6 +84,7 @@ export default {
         })
       })
   },
+
   /**
    * --- DELETE
    */
