@@ -3,6 +3,7 @@
  */
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
+import { uniq } from 'lodash'
 import helper from './../helpers'
 
 /**
@@ -20,10 +21,26 @@ export default {
   */
   read(req, res) {
     User.findOne({_id: res.locals.user._id}).populate({path: 'modulesList', populate: {path: 'modules'}}).exec()
-    .then(user => {
-      if (!user.modulesList.modules) return res.status(404).json({ success: false, message: 'Problem with retrieving modules..' })
-      res.status(200).json({success: true, content: user.modulesList.modules})
-    })
+      .then(user => {
+        if (!user.modulesList.modules) return res.status(404).json({ success: false, message: 'Problem with retrieving modules..' })
+        
+        let mods = []
+        let data = {
+          modules: user.modulesList.modules,
+          categories: user.modulesList.categories
+        }
+        for (let cat of data.categories) {
+          let obj = {category: cat, modules: []}
+          for (let item of data.modules) {
+            if (item.category == cat) obj.modules.push(item)
+          }
+          mods.push(obj)
+        }
+        res.status(200).json({success: true, content: mods})
+      })
+      .catch(err => {
+        res.status(500).json({ success: false, message: err.message })
+      })
   },
   /**
    * --- ADD
@@ -35,6 +52,13 @@ export default {
     User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
       .then(user => {
         user.modulesList.modules.push(req.body)
+        if (req.body.category) {
+          user.modulesList.categories.push(req.body.category)
+        } else {
+          let category = 'Uncategorized'
+          user.modulesList.categories.push(category)
+        }
+        user.modulesList.categories = uniq(user.modulesList.categories)
         user.modulesList.save()
         .then(result => {
           res.status(200).json({ success: true, message: 'Module added with success !' })
