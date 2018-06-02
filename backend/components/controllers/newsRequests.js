@@ -23,51 +23,76 @@ export default {
   */
   find(req, res) {
     // TODO
+    // REFACTORING
     let params = req.body.params
     let args = params.args
     let oneHourOld = moment().subtract(1, 'hours').format('x')
     let threeDaysOld = moment().subtract(3, 'days').format('x')
+
     NewsArticle.deleteMany({ 'publishedAt': { '$lte': threeDaysOld } }).exec()
       .then(() => {
         NewsRequest.find({ 'params.label': params.label, 'params.args': args }).populate('articles').exec()
           .then(results => {
             let getOut = (requestAge, optionalArticles) => {
-              console.log('optional: ', optionalArticles)
+              // console.log('optional: ', optionalArticles)
               if (requestAge == 'old') {
                 let finalArticles = uniqBy(optionalArticles, 'title')
-                console.log('final old: ', finalArticles)
-                return res.status(200).json({ success: true, content: finalArticles })
+                return res.status(200).json({ success: true, message: 'List of old articles', content: finalArticles })
               }
 
-              let finalGetOut = (newArticles) => {
-                let finalArticles = []
-                if (!optionalArticles) {
-                  finalArticles = concat(finalArticles, optionalArticles)
+              let finalGetOut = (finalArticles) => {
+                let bulkOps = []
+                for (let article of finalArticles) {
+                  article.publishedAt = moment(article.publishedAt).format('x')
+                  let upsertDoc = {
+                    'updateOne': {
+                      'filter': { 'title': article.title },
+                      'update': article,
+                      'upsert': true
+                    }
+                  };
+                  bulkOps.push(upsertDoc);
                 }
-                console.log('news: ', newArticles)
-                finalArticles = concat(finalArticles, newArticles)
-                finalArticles = uniqBy(finalArticles, 'title')
-                finalArticles = sortBy(finalArticles, 'date').reverse()
-                res.status(200).json({ success: true, content: finalArticles })
-              }
+                NewsArticle.collection.bulkWrite(bulkOps)
+                  .then(savedArticles => {
+                    // console.log(savedArticles)
+
+                    if (optionalArticles) {
+                      finalArticles = concat(finalArticles, optionalArticles)
+                    }
+                    finalArticles = uniqBy(finalArticles, 'title')
+                    finalArticles = sortBy(finalArticles, 'date').reverse()
+
+                    let freshRequest = new NewsRequest(req.body)
+                    freshRequest.date = moment().format('x')
+
+                    for (let key of Object.keys(savedArticles.upsertedIds)) {
+                      // console.log(key, savedArticles.upsertedIds[key])
+                      freshRequest.articles[key] = savedArticles.upsertedIds[key]
+                    }
+
+                    freshRequest.save()
+                      .then(() => {
+                        res.status(200).json({ success: true, messages: 'List of old + new articles', content: finalArticles, length: finalArticles.length })
+                      })
+                  })
+              } // end of finalGetOut
 
               if (params.label == 'headlines-source') {
                 axios.get('https://newsapi.org/v2/top-headlines?pageSize=100&apiKey=' + process.env.NEWSAPI_KEY + '&sources=' + args.source)
                   .then(res => {
-                    console.log('axios source: ', res.data)
                     let articles = res.data.articles
                     finalGetOut(articles)
                   })
               } else {
                 axios.get('https://newsapi.org/v2/top-headlines?pageSize=100&apiKey=' + process.env.NEWSAPI_KEY + '&country=' + args.country + '&category=' + args.category)
                   .then(res => {
-                    console.log('axios country category: ', res.data)
                     let articles = res.data.articles
                     finalGetOut(articles)
                   })
               }
               
-            }
+            } // end of getOut()
 
             if (results[0]) {
               let sortedResults = sortBy(results, 'date').reverse()
@@ -81,16 +106,6 @@ export default {
                 getOut('old', finalArticlesArray)
               } else getOut('new', finalArticlesArray)
             } else getOut('new')
-            // --- FOR REFERENCE
-            // let tm = moment(threeDaysOld).format('x')
-            // let reqtm = moment(results[0].date).format('x')
-            // console.log('---- param: ', results[0].params.args)
-            // console.log('---- RESULTS: ', results)
-            // console.log('---- 3 days old: ', tm)
-            // console.log('---- req date: ', reqtm)
-            // if (tm < reqtm) {
-            //   console.log('ok')
-            // }
           })
           .catch(err => {
             res.status(500).json({ success: false, message: err.message })
