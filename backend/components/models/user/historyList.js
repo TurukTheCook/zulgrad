@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
-import HistorySchema from '../../schemas/history'
+import TempArticleSchema from '../../schemas/tempArticle'
 
 let HistoryListSchema = new mongoose.Schema(
   {
-    history: [HistorySchema]
+    articles: [TempArticleSchema]
   },
   { timestamps: true }
 );

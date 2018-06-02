@@ -4,8 +4,7 @@ import newsRequests from './../controllers/newsRequests'
 let router = express.Router()
 
 router.route('/requests')
-  .get(newsRequests.readAll)
-  .post(newsRequests.add)
+  .post(newsRequests.find)
 
 // router.route('/requests/:id')
 //   .get(newsRequests.readOne)

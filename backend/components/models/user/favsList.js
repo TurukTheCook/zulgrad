@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
-import FavSchema from '../../schemas/fav'
+import TempArticleSchema from '../../schemas/tempArticle'
 
 let FavsListSchema = new mongoose.Schema(
   {
-    favs: [FavSchema]
+    articles: [TempArticleSchema]
   },
   { timestamps: true }
 );

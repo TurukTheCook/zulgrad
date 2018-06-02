@@ -4,7 +4,7 @@ import ModuleSchema from '../../schemas/module'
 let ModulesListSchema = new mongoose.Schema(
   {
     modules: [ModuleSchema],
-    categories: [String]
+    groups: [String]
   },
   { timestamps: true }
 );

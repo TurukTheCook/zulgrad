@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export default new mongoose.Schema({
+let NewsArticleSchema = new mongoose.Schema({
     source: { id: { type: String }, name: { type: String } },
     author: { type: String },
     title: { type: String },
@@ -11,3 +11,5 @@ export default new mongoose.Schema({
   },
   { timestamps: true }
 )
+
+export default mongoose.model('NewsArticle', NewsArticleSchema)

@@ -6,11 +6,12 @@ let router = express.Router()
  * ROUTES IMPORT
  */
 import modules from './modules'
+import newsRequest from './newsRequest'
 
 /**
  * LINK TO ROUTER
  */
-prefix.use(modules)
+prefix.use(modules, newsRequest)
 
  /**
   * API PREFIX AND EXPORT

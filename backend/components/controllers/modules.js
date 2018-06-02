@@ -2,7 +2,6 @@
  * --- IMPORT STANDARDS
  */
 import mongoose from 'mongoose'
-import jwt from 'jsonwebtoken'
 import { uniq } from 'lodash'
 import helper from './../helpers'
 
@@ -28,12 +27,12 @@ export default {
         let mods = []
         let data = {
           modules: user.modulesList.modules,
-          categories: user.modulesList.categories
+          groups: user.modulesList.groups
         }
-        for (let cat of data.categories) {
-          let obj = {category: cat, modules: []}
+        for (let group of data.groups) {
+          let obj = {group: group, modules: []}
           for (let item of data.modules) {
-            if (item.category == cat) obj.modules.push(item)
+            if (item.group == group) obj.modules.push(item)
           }
           mods.push(obj)
         }
@@ -68,13 +67,13 @@ export default {
     User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
       .then(user => {
         user.modulesList.modules.push(req.body)
-        if (req.body.category) {
-          user.modulesList.categories.push(req.body.category)
+        if (req.body.group) {
+          user.modulesList.groups.push(req.body.group)
         } else {
-          let category = 'Uncategorized'
-          user.modulesList.categories.push(category)
+          let group = 'Uncategorized'
+          user.modulesList.groups.push(group)
         }
-        user.modulesList.categories = uniq(user.modulesList.categories)
+        user.modulesList.groups = uniq(user.modulesList.groups)
         user.modulesList.save()
         .then(result => {
           res.status(200).json({ success: true, message: 'Module added with success !' })

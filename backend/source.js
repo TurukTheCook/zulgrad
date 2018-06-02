@@ -1,7 +1,7 @@
 let query = 'https://newsapi.org/v2/top-headlines?apiKey=2a8dac7fe3b74d588661fd224e73363f&pageSize=100&sources='
 let sources = ''
 
-let testArray = [
+let sourceArray = [
   {
     "id": "abc-news",
     "name": "ABC News",
@@ -1246,9 +1246,20 @@ let testArray = [
   }
 ]
 
-for(let i = 0; i < testArray.length; i++) {
-  console.log('Source number: ', i)
-  query = query + testArray[i].id + ','
+console.log(' ')
+console.log('###################')
+console.log('# SOURCE EXTRACT #')
+console.log('#################')
+console.log(' ')
+
+for(let i = 0; i < sourceArray.length; i++) {
+  console.log('Source number: ' + i + ', id: ' + sourceArray[i].id)
+  query = query + sourceArray[i].id + ','
 }
-console.log('THE END..')
+
+console.log(' ')
+console.log('#############')
+console.log('# JOB DONE #')
+console.log('###########')
+console.log(' ')
 console.log('query: ', query)
