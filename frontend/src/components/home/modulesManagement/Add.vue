@@ -18,8 +18,8 @@
         </div>
         <div v-if="newModule.label == 'source'" class="form-group mb-2">
           <label for="inputSource">Source</label>
-          <input v-model="newModule.args.source" type="text" id="inputSource" class="form-control" :placeholder="value">
-          <small class="text-primary">Enter this ID of the source (see list to select one directly)</small><br>
+          <input v-model="newModule.args.source" type="text" id="inputSource" class="form-control" :placeholder="value" disabled>
+          <small class="text-primary">Select one in the list below</small><br>
           <a class="btn btn-sm btn-outline-primary cursor-pointer my-2" data-toggle="collapse" :data-target="'#sources'">Show Sources List</a>
           <div class="collapse" id="sources">
             <div class="sources-wrapper d-flex flex-wrap justify-content-center">
