@@ -4,11 +4,13 @@ import modules from './../controllers/modules'
 let router = express.Router()
 
 router.route('/modules')
-  .get(modules.readAll)
-  .post(modules.add)
+  .post(modules.addModule)
 
 router.route('/modules/:id')
-  .get(modules.readOne)
-  .delete(modules.del)
+  .get(modules.readModule)
+  .delete(modules.delModule)
+
+router.route('/groups')
+  .get(modules.readAllGroups)
 
 export default router

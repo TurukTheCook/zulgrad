@@ -3,8 +3,5 @@ import mongoose from 'mongoose'
 export default new mongoose.Schema({
     name: { type: String, required: true},
     label: { type: String, required: true },
-    args: { type: Object, required: true },
-    group: { type: String, default: 'Uncategorized' }
-  },
-  { timestamps: true }
-)
+    args: { type: Object, required: true }
+})

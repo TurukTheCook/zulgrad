@@ -73,6 +73,9 @@ export default {
           let newModulesList = new ModulesList
           let newHistoryList = new HistoryList
           let newFavsList = new FavsList
+
+          newModulesList.groups.push({name: "No Group"})
+
           newUser.password = bcrypt.hashSync(bodyUser.password, 12)
           newUser.stats = newStats._id
           newUser.modulesList = newModulesList._id

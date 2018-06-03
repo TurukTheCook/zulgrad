@@ -1,10 +1,9 @@
 import mongoose from 'mongoose'
-import ModuleSchema from '../../schemas/module'
+import GroupSchema from '../../schemas/group'
 
 let ModulesListSchema = new mongoose.Schema(
   {
-    modules: [ModuleSchema],
-    groups: [String]
+    groups: [GroupSchema]
   },
   { timestamps: true }
 );
