@@ -1,13 +1,14 @@
 <template>
 <div>
-  <!-- <div class="alert alert-warning">Alert Warning...</div> -->
+  <div v-if="!success" class="alert alert-warning m-0 mb-2 w-100">{{message}}</div>
   <!-- <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">Home</a></li>
     <li class="breadcrumb-item"><a href="#">Library</a></li>
     <li class="breadcrumb-item active">Data</li>
   </ol> -->
   <!-- TO DO -->
-  <news-articles :articles="articles"></news-articles>
+  <loading v-if="loading"></loading>
+  <news-articles v-else :articles="articles"></news-articles>
 </div>
 </template>
 
@@ -15,6 +16,7 @@
 import LoadingComponent from './../LoadingComponent'
 import ErrorComponent from './../ErrorComponent'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import http from '../../helpers/http.js'
 
 export default {
   name: 'Modules',
@@ -28,8 +30,12 @@ export default {
     }),
     FontAwesomeIcon
   },
+  props: ['mod'],
   data() {
     return {
+      success: true,
+      loading: true,
+      message: 'An error occurred..',
       articles: [
         {
           source: { id: "google-news-fr", name: "Google News (France)" },
@@ -157,6 +163,32 @@ export default {
         }
       ]
     }
+  },
+  methods: {
+    fetchData() {
+      if (!this.mod) {
+        if (this.$route.query.id) {
+          /**
+           * --- NO PROPS >> GET THE MODULE VIA ID
+           */
+          http.get('modules/' + this.$route.query.id)
+            .then(res => {
+              console.log(res.data)
+              
+            })
+        }
+      } else {
+        /**
+         * --- PROPS >> GET THE ARTICLES DIRECTLY
+         */
+        // TODO
+        console.log('via props')
+        console.log(this.mod)
+      }
+    }
+  },
+  created() {
+    this.fetchData()
   }
 }
 </script>

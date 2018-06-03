@@ -43,29 +43,52 @@ const router = new Router({
         {
           path: '',
           name: 'modules',
+          props: true,
           component: loadComp('home/Modules')
         },
         {
-          path: '/profile',
+          path: 'profile',
           name: 'profile',
           component: loadComp('home/Profile')
         },
         {
-          path: '/history',
+          path: 'about',
+          name: 'about',
+          component: loadComp('home/About')
+        },
+        {
+          path: 'history',
           name: 'history',
           component: loadComp('home/History')
         },
         {
-          path: '/favs',
+          path: 'favs',
           name: 'favs',
           component: loadComp('home/Favs')
+        },
+        {
+          path: 'modules',
+          component: loadComp('home/modulesManagement/Home'),
+          children: [
+            {
+              path: '',
+              name: 'modules.manage',
+              props: true,
+              component: loadComp('home/modulesManagement/Manage')
+            },
+            {
+              path: 'newmodule',
+              name: 'modules.add',
+              component: loadComp('home/modulesManagement/Add')
+            },
+            {
+              path: 'newgroup',
+              name: 'groups.add',
+              component: loadComp('home/modulesManagement/AddGroup')
+            }
+          ]
         }
       ]
-    },
-    {
-      path: '/test',
-      name: 'test',
-      component: loadComp('_test/test')
     },
     {
       path: '*',

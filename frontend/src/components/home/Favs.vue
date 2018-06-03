@@ -1,6 +1,9 @@
 <template>
-  <div class="container-fluid mx-auto">
-    This is the favs component
+  <div class="d-flex flex-column w-100">
+    <div class="bg-secondary text-white p-3"><h5 class="mb-0">Favorites</h5></div>
+    <div>
+      <!-- TODO -->
+    </div>
   </div>
 </template>
 

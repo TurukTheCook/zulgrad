@@ -1,8 +1,8 @@
 <template>
 <div>
-  <loading v-if="(loading && success)"></loading>
   <div v-if="!success" class="alert alert-danger m-0 mb-2 w-100">{{message}}</div>
-  <div v-if="!loading" class="news-container d-flex flex-column">
+  <loading v-if="loading"></loading>
+  <div v-else class="news-container d-flex flex-column">
     <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark mb-2">
       <div class="container border-bottom">
           <button class="navbar-toggler mb-1" type="button" data-toggle="collapse" data-target="#sidemenu" aria-controls="sidemenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,14 +11,17 @@
         <router-link class="navbar-brand text-primary mb-1" to="/">Zulgrad <small class="text-muted">The News Bringer</small></router-link>
           <div class="d-flex flex-row collapse show" id="navbarColor02">
             <ul class="navbar-nav flex-row ml-auto">
-              <li class="nav-item active px-2">
-                <router-link class="nav-link" :to="{name: 'modules'}"><font-awesome-icon icon="home"/></router-link>
+              <!-- <li class="nav-item px-2">
+                <router-link class="nav-link link-hover-primary" :to="{name: 'modules'}"><font-awesome-icon class="hover-primary" icon="home"/></router-link>
+              </li> -->
+              <li class="nav-item px-2">
+                <router-link class="nav-link link-hover-primary" :to="{name: 'profile'}"><font-awesome-icon class="hover-primary" icon="portrait"/></router-link>
               </li>
               <li class="nav-item px-2">
-                <router-link class="nav-link" :to="{name: 'profile'}"><font-awesome-icon icon="portrait"/></router-link>
+                <router-link class="nav-link link-hover-primary" :to="{name: 'about'}"><font-awesome-icon class="hover-primary" icon="info-circle"/></router-link>
               </li>
               <li class="nav-item px-2">
-                <a class="nav-link" href="" v-on:click.prevent="logout"><font-awesome-icon icon="door-open"/></a>
+                <a class="nav-link link-hover-primary cursor-pointer" v-on:click.prevent="logout"><font-awesome-icon class="hover-primary" icon="door-open"/></a>
               </li>
             </ul>
           </div>
@@ -29,17 +32,23 @@
         <div class="collapse navbar-collapse mr-3 mb-3" id="sidemenu">
           <ul class="news-side-menu nav flex-column">
             <li class="nav-item bg-secondary border">
-              <div class="d-flex justify-content-between">
-                <a class="p-3 cursor-pointer text-white modules-link" data-toggle="collapse" data-target="#modules"><font-awesome-icon icon="cubes"/> Modules</a>
-                <a class="p-3 cursor-pointer text-white modules-add"><font-awesome-icon icon="plus-circle"/></a>
-              </div>
-              <div id="modules" class="collapse show">
-                <ul class="nav flex-column bg-white pl-3">
-                  <li v-if="modules[0]" v-for="item in modules" :key="item.name" class="nav-item">
-                    <a class="nav-link active" href="#">{{item.name}}</a>
+              <router-link class="nav-link text-white link-hover-primary" :to="{name: 'modules.manage', params: { groups: mods }}"><font-awesome-icon icon="cubes"/> News Modules <span class="float-right"><font-awesome-icon class="hover-primary" icon="plus-circle"/></span></router-link>
+              <div>
+                <ul class="nav flex-column">
+                  <li v-for="(obj, index) in mods" :key="index" class="nav-item bg-primary">
+                    <a class="nav-link text-white border cursor-pointer" data-toggle="collapse" :data-target="'#' + index">{{obj.name}}</a>
+                    <div :id="index" class="collapse show">
+                      <ul class="nav flex-column bg-white pl-3">
+                        <li v-for="item in obj.modules" :key="item._id" class="nav-item">
+                          <router-link class="nav-link active" :to="{name: 'modules', params: { mod: { label: item.label, args: item.args } }, query: { id: item._id}}">
+                            {{item.name}}
+                          </router-link>
+                        </li>
+                      </ul>
+                    </div>
                   </li>
-                  <li v-if="!modules[0]" class="nav-item">
-                    <small>You have no modules..</small>
+                  <li class="nav-item bg-white text-dark p-2">
+                    <button class="btn btn-block btn-outline-primary" @click="toModulesManage()">Add a module</button>
                   </li>
                 </ul>
               </div>
@@ -52,13 +61,14 @@
             </li>
           </ul>
         </div>
-        <router-view class="news-main-content flex-grow"></router-view>
+        <!-- IF NEEDED, reload watch fullpath ->  :key="$route.fullPath" -->
+        <router-view class="news-main-content flex-grow" :key="$route.fullPath"></router-view>
       </div>
     </main>
     <footer class="text-white bg-dark mt-auto">
       <div class="container d-flex flex-column flex-sm-row justify-content-between p-2">
-        <p>Zulgrad "The News Bringer" - <font-awesome-icon icon="copyright"/> 2018</p>
-        <p>
+        <p class="p-2 mb-0">Zulgrad "The News Bringer" - <font-awesome-icon icon="copyright"/> 2018</p>
+        <p class="p-2 mb-0">
           - News delivered by <a href="https://newsapi.org/" target="_blank">NewsAPI</a><br>
           - Cryptocurrencies prices delivered by <a href="https://coinmarketcap.com/" target="_blank">CoinMarketCap</a>
         </p>
@@ -82,30 +92,57 @@ export default {
       loading: true,
       success: true,
       message: null,
-      modules: []
+      mods: []
     }
   },
   methods: {
     logout() {
       localStorage.removeItem('X-Token');
       this.$router.push({name: 'welcome'})
+    },
+    toModulesManage() {
+      this.$router.push({name: 'modules.manage'})
+    },
+    fetchData() {
+      http.get('groups')
+        .then(res => {
+          this.loading = false
+          this.mods = res.data.content
+
+          let firstList = this.mods[0]
+          if (firstList) {
+            let firstModule = firstList.modules[0]
+            if (firstModule) {
+              console.log('ok firstmodule')
+              this.$router.replace({name: 'modules', params: { mod: { label: firstModule.label, args: firstModule.args } }, query: {id: firstModule._id}})
+            } else this.$router.push({name: 'modules.manage', params: { groups: this.mods }})
+          } 
+          // --- MOVED THIS LOGIC BELOW TO BACK-END INSTEAD AND SERVE THE RESULT DIRECTLY
+
+          // let groupsData = res.data.content.groups
+          // let modulesData = res.data.content.modules
+
+          // for(let group of groupsData) {
+          //   let obj = {group: group, modules: []}
+          //   for(let item of modulesData) {
+          //   if (item.group == group) obj.modules.push(item)
+          //   }
+          //   this.mods.push(obj)
+          // }
+        })
+        .catch(err => {
+          this.loading = false
+          console.log(err.message)
+          // this.success = err.response.data.success
+          // this.message = err.response.data.message
+          // setTimeout(() => {
+          //   this.$router.push({name: 'login'})
+          // },3000)
+        })
     }
   },
   created() {
-    http.get('modules')
-    .then(res => {
-      this.loading = false
-      this.modules = res.data.content
-      console.log('modules: ', this.modules)
-    })
-    .catch(err => {
-      this.loading = true
-      this.success = err.response.data.success
-      this.message = err.response.data.message
-      setTimeout(() => {
-        this.$router.push({name: 'login'})
-      },3000)
-    })
+    this.fetchData()
   }
 };
 </script>

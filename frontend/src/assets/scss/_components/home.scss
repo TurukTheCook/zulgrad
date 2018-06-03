@@ -30,15 +30,16 @@
 
 #sidemenu {
   width: 100%;
-  max-width: 200px;
+  max-width: 15rem;
+  & > ul {
+    flex: 1
+  }
 }
 
-.modules-link {
-  flex: 1
-}
-
-.modules-add:hover {
-  color: #20c997 !important
+.link-hover-primary:hover {
+  svg.hover-primary {
+    color: #20c997 !important
+  }
 }
 
 @media all and (max-width: 650px) {

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <transition name="fadeInOut" mode="out-in">
-      <router-view/>
+      <router-view></router-view>
     </transition>
     <vue-progress-bar></vue-progress-bar>
   </div>
