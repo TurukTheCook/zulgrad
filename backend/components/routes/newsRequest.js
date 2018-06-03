@@ -6,6 +6,9 @@ let router = express.Router()
 router.route('/requests')
   .post(newsRequests.find)
 
+router.route('/sources')
+  .get(newsRequests.sources)
+
 // router.route('/requests/:id')
 //   .get(newsRequests.readOne)
 //   .delete(newsRequests.del)

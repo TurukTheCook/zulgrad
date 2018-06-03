@@ -1,7 +1,9 @@
 import mongoose from 'mongoose'
 import GlobalStats from '../components/models/stats/globalStats'
+import dotEnv from 'dotenv'
+dotEnv.config()
 
-mongoose.connect('mongodb://localhost:27017/newshero', {}, (err) => {
+mongoose.connect(process.env.MONGO_URL, {}, (err) => {
     if (err) { throw err; }
     else console.log("Connected to database..")
 })

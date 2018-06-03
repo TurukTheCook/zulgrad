@@ -13,6 +13,7 @@ import helper from './../helpers'
 import User from '../models/user/user'
 import NewsRequest from '../models/news/request'
 import NewsArticle from '../models/news/article'
+import SourcesList from '../models/news/sources'
 
 /**
  * --- EXPORT
@@ -130,5 +131,14 @@ export default {
       .catch(err => {
         res.status(500).json({ success: false, message: err.message })
       })
+  },
+
+  /**
+   * --- SOURCES LIST
+   */
+  sources(req, res) {
+    SourcesList.find({}).exec().then(results => {
+      res.status(200).json({success: true, content: results})
+    }).catch(err => res.status(500).json({ success: false, message: err.message }))
   }
 }
