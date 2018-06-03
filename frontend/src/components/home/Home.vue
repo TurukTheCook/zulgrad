@@ -101,7 +101,7 @@ export default {
       this.$router.push({name: 'welcome'})
     },
     toModulesManage() {
-      this.$router.push({name: 'modules.manage'})
+      this.$router.push({name: 'modules.manage', params: { groups: this.mods }})
     },
     fetchData() {
       http.get('groups')

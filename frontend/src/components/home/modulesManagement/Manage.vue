@@ -10,7 +10,7 @@
       <div v-for="group in groups" :key="group._id" class="modules-groups d-flex flex-column justify-content-center align-items-center p-2 m-2">
         <h6><strong>{{group.name}}</strong></h6>
         <!-- <p class="h1 text-primary"><font-awesome-icon icon="plus-circle"/></p> -->
-        <button class="btn btn-block btn-outline-primary">Manage</button>
+        <button class="btn btn-block btn-outline-primary" disabled>Manage</button>
       </div>
       <div class="modules-add d-flex flex-column justify-content-center align-items-center p-2 m-2">
         <h6 class="cursor-default"><strong>Add Group</strong></h6>
