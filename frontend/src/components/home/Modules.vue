@@ -17,6 +17,7 @@ import LoadingComponent from './../LoadingComponent'
 import ErrorComponent from './../ErrorComponent'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import http from '../../helpers/http.js'
+import moment from 'moment'
 
 export default {
   name: 'Modules',
@@ -166,24 +167,35 @@ export default {
   },
   methods: {
     fetchData() {
-      if (!this.mod) {
-        if (this.$route.query.id) {
-          /**
-           * --- NO PROPS >> GET THE MODULE VIA ID
+      if (this.$route.query.id && !this.mod) {
+        /**
+         * --- NO PROPS >> GET THE MODULE VIA ID
            */
+          console.log('via query')
+
           http.get('modules/' + this.$route.query.id)
             .then(res => {
               console.log(res.data)
-              
             })
-        }
+      } else if (!this.mod) {
+        this.$router.push({name: 'news.manage'})
       } else {
         /**
          * --- PROPS >> GET THE ARTICLES DIRECTLY
          */
         // TODO
-        console.log('via props')
-        console.log(this.mod)
+
+        http.post('/requests', this.mod)
+          .then(res => {
+            this.articles = res.data.content
+            this.loading = false
+          })
+          .catch(err => {
+            console.log(err.message)
+            this.loading = false
+            this.success = err.response.data.success
+            this.message = err.response.data.message
+          })
       }
     }
   },

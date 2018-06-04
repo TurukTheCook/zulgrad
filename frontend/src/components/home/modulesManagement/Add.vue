@@ -180,15 +180,19 @@ export default {
         data.module.label = 'source'
         data.module.args.source = this.newModule.args.source
       } else {
+        data.module.label = 'countcat'
         data.module.args.country = this.newModule.args.country
         data.module.args.category = this.newModule.args.category
       }
       data.module.name = this.newModule.name
       http.post('modules', data)
         .then(res => {
-          this.calling = false
           this.success = res.data.success
           this.message = res.data.message
+          setTimeout(() => {
+            this.$router.go({path: '/home'})
+          }, 1000);
+          this.calling = false
         })
         .catch(err => {
           this.calling = false
@@ -207,8 +211,8 @@ export default {
     fetchData() {
       http.get('sources')
         .then(res => {
-          this.loading = false
           this.sources = res.data.content
+          this.loading = false
         })
         .catch(err => {
           this.loading = false

@@ -32,8 +32,8 @@
         <div class="collapse navbar-collapse mr-3 mb-3" id="sidemenu">
           <ul class="news-side-menu nav flex-column">
             <li class="nav-item bg-secondary border">
-              <router-link class="nav-link text-white link-hover-primary" :to="{name: 'modules.manage', params: { groups: mods }}"><font-awesome-icon icon="cubes"/> News Modules <span class="float-right"><font-awesome-icon class="hover-primary" icon="plus-circle"/></span></router-link>
-              <div>
+              <router-link class="nav-link text-white link-hover-primary" :to="{name: 'news.manage', params: { groups: mods }}"><font-awesome-icon icon="cubes"/> News Modules <span class="float-right"><font-awesome-icon class="hover-primary" icon="plus-circle"/></span></router-link>
+              <div :key="$route.fullPath">
                 <ul class="nav flex-column">
                   <li v-for="(obj, index) in mods" :key="index" class="nav-item bg-primary">
                     <a class="nav-link text-white border cursor-pointer" data-toggle="collapse" :data-target="'#' + index">{{obj.name}}</a>
@@ -101,43 +101,26 @@ export default {
       this.$router.push({name: 'welcome'})
     },
     toModulesManage() {
-      this.$router.push({name: 'modules.manage', params: { groups: this.mods }})
+      this.$router.push({name: 'news.manage', params: { groups: this.mods }})
     },
     fetchData() {
       http.get('groups')
         .then(res => {
-          this.loading = false
           this.mods = res.data.content
 
           let firstList = this.mods[0]
           if (firstList) {
             let firstModule = firstList.modules[0]
             if (firstModule) {
-              console.log('ok firstmodule')
               this.$router.replace({name: 'modules', params: { mod: { label: firstModule.label, args: firstModule.args } }, query: {id: firstModule._id}})
-            } else this.$router.push({name: 'modules.manage', params: { groups: this.mods }})
+            } else this.$router.push({name: 'news.manage', params: { groups: this.mods }})
           } 
-          // --- MOVED THIS LOGIC BELOW TO BACK-END INSTEAD AND SERVE THE RESULT DIRECTLY
-
-          // let groupsData = res.data.content.groups
-          // let modulesData = res.data.content.modules
-
-          // for(let group of groupsData) {
-          //   let obj = {group: group, modules: []}
-          //   for(let item of modulesData) {
-          //   if (item.group == group) obj.modules.push(item)
-          //   }
-          //   this.mods.push(obj)
-          // }
+          this.loading = false
         })
         .catch(err => {
           this.loading = false
-          console.log(err.message)
-          // this.success = err.response.data.success
-          // this.message = err.response.data.message
-          // setTimeout(() => {
-          //   this.$router.push({name: 'login'})
-          // },3000)
+          this.success = err.response.data.success
+          this.message = err.response.data.message
         })
     }
   },

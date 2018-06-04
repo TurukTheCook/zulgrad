@@ -24,9 +24,7 @@ import moment from "moment-timezone";
 
 export default {
   name: 'NewsArticles',
-  props: {
-    articles: Array
-  },
+  props: ['articles'],
   methods: {
     moment(date) {
       let timezone = moment.tz.guess()

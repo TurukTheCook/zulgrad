@@ -41,7 +41,7 @@ const router = new Router({
       component: loadComp('home/Home'),
       children: [
         {
-          path: '',
+          path: 'modules',
           name: 'modules',
           props: true,
           component: loadComp('home/Modules')
@@ -67,23 +67,23 @@ const router = new Router({
           component: loadComp('home/Favs')
         },
         {
-          path: 'modules',
+          path: 'news-management',
           component: loadComp('home/modulesManagement/Home'),
           children: [
             {
               path: '',
-              name: 'modules.manage',
+              name: 'news.manage',
               props: true,
               component: loadComp('home/modulesManagement/Manage')
             },
             {
               path: 'newmodule',
-              name: 'modules.add',
+              name: 'newsmodule.add',
               component: loadComp('home/modulesManagement/Add')
             },
             {
               path: 'newgroup',
-              name: 'groups.add',
+              name: 'newsgroups.add',
               component: loadComp('home/modulesManagement/AddGroup')
             }
           ]

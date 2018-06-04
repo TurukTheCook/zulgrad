@@ -25,26 +25,36 @@ export default {
   find(req, res) {
     // TODO
     // REFACTORING
-    let params = req.body.params
-    let args = params.args
-    let oneHourOld = moment().subtract(1, 'hours').format('x')
-    let threeDaysOld = moment().subtract(3, 'days').format('x')
+    let label = req.body.label
+    let args = req.body.args
+    let oneHourOld = moment().subtract(1, 'hours')
+    let threeDaysOld = moment().subtract(3, 'days')
 
     NewsArticle.deleteMany({ 'publishedAt': { '$lte': threeDaysOld } }).exec()
       .then(() => {
-        NewsRequest.find({ 'params.label': params.label, 'params.args': args }).populate('articles').exec()
+        NewsRequest.find({ 'params.label': label, 'params.args': args }).populate('articles').exec()
           .then(results => {
             let getOut = (requestAge, optionalArticles) => {
-              // console.log('optional: ', optionalArticles)
+              /**
+               * --- END OF ROUTE IF OLD REQUEST (<1h)
+               */
               if (requestAge == 'old') {
+                console.log('old request')
                 let finalArticles = uniqBy(optionalArticles, 'title')
+                finalArticles = sortBy(finalArticles, 'publishedAt').reverse()
+                // for (let i = 0; i < finalArticles.length; i++) {
+                //   finalArticles[i].publishedAt = moment(finalArticles[i].publishedAt, 'x').format("MMMM Do YYYY [at] HH:mm")
+                // }
                 return res.status(200).json({ success: true, message: 'List of old articles', content: finalArticles })
               }
 
+              /**
+               * --- OR CONTINUE TO NEW REQUEST
+               */
               let finalGetOut = (finalArticles) => {
                 let bulkOps = []
                 for (let article of finalArticles) {
-                  article.publishedAt = moment(article.publishedAt).format('x')
+                  // article.publishedAt = moment(article.publishedAt).format('x')
                   let upsertDoc = {
                     'updateOne': {
                       'filter': { 'title': article.title },
@@ -62,34 +72,56 @@ export default {
                       finalArticles = concat(finalArticles, optionalArticles)
                     }
                     finalArticles = uniqBy(finalArticles, 'title')
-                    finalArticles = sortBy(finalArticles, 'date').reverse()
 
-                    let freshRequest = new NewsRequest(req.body)
-                    freshRequest.date = moment().format('x')
+                    let freshRequest = new NewsRequest({
+                      'params.label': label,
+                      'params.args': args,
+                      'date': moment()
+                    })
+                    // freshRequest.date = moment().format('x')
 
                     for (let key of Object.keys(savedArticles.upsertedIds)) {
                       // console.log(key, savedArticles.upsertedIds[key])
                       freshRequest.articles[key] = savedArticles.upsertedIds[key]
                     }
-
+                    
+                    /**
+                     * --- END OF ROUTE IF NEW REQUEST TO API
+                     */
                     freshRequest.save()
                       .then(() => {
+                        console.log('new request')
+                        finalArticles = sortBy(finalArticles, 'publishedAt').reverse()
                         res.status(200).json({ success: true, messages: 'List of old + new articles', content: finalArticles, length: finalArticles.length })
                       })
+                      .catch(err => {
+                        res.status(500).json({ success: false, message: err.message })
+                      })
+                  })
+                  .catch(err => {
+                    res.status(500).json({ success: false, message: err.message })
                   })
               } // end of finalGetOut
 
-              if (params.label == 'headlines-source') {
+              if (label == 'source') {
                 axios.get('https://newsapi.org/v2/top-headlines?pageSize=100&apiKey=' + process.env.NEWSAPI_KEY + '&sources=' + args.source)
                   .then(res => {
+                    console.log('did a request to api')
                     let articles = res.data.articles
                     finalGetOut(articles)
+                  })
+                  .catch(err => {
+                    res.status(500).json({ success: false, message: err.message })
                   })
               } else {
                 axios.get('https://newsapi.org/v2/top-headlines?pageSize=100&apiKey=' + process.env.NEWSAPI_KEY + '&country=' + args.country + '&category=' + args.category)
                   .then(res => {
+                    console.log('did a request to api')
                     let articles = res.data.articles
                     finalGetOut(articles)
+                  })
+                  .catch(err => {
+                    res.status(500).json({ success: false, message: err.message })
                   })
               }
               

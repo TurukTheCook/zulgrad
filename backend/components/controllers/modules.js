@@ -22,19 +22,6 @@ export default {
     User.findOne({_id: res.locals.user._id}).populate({path: 'modulesList'}).exec()
       .then(user => {
         res.status(200).json({success: true, content: user.modulesList.groups})
-        // FOR REFERENCE
-        // let mods = []
-        // let data = {
-        //   modules: user.modulesList.modules,
-        //   groups: user.modulesList.groups
-        // }
-        // for (let group of data.groups) {
-        //   let obj = {group: group, modules: []}
-        //   for (let item of data.modules) {
-        //     if (item.group == group) obj.modules.push(item)
-        //   }
-        //   mods.push(obj)
-        // }
       })
       .catch(err => {
         res.status(500).json({ success: false, message: err.message })

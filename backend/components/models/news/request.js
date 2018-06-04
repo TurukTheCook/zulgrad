@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 let NewsRequestSchema = new mongoose.Schema({
-    date: { type: String, required: true },
+    date: { type: Date, required: true },
     params: {
       label: { type: String, required: true },
       args: { 
