@@ -14,6 +14,7 @@ import User from '../models/user/user'
 import NewsRequest from '../models/news/request'
 import NewsArticle from '../models/news/article'
 import SourcesList from '../models/news/sources'
+import CountriesList from '../models/news/countries'
 
 /**
  * --- EXPORT
@@ -170,8 +171,22 @@ export default {
    * --- SOURCES LIST
    */
   sources(req, res) {
-    SourcesList.find({}).exec().then(results => {
-      res.status(200).json({success: true, content: results})
-    }).catch(err => res.status(500).json({ success: false, message: err.message }))
+    SourcesList.find({}).exec()
+      .then(results => {
+        res.status(200).json({success: true, content: results})
+      })
+      .catch(err => res.status(500).json({ success: false, message: err.message }))
+  },
+
+  /**
+   * --- COUNTRIES LIST
+   */
+  countries(req, res) {
+    CountriesList.find({}).exec()
+      .then(results => {
+        console.log(results)
+        res.status(200).json({success: true, content: results})
+      })
+      .catch(err => res.status(500).json({ success: false, message: err.message }))
   }
 }

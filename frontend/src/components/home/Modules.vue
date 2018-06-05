@@ -62,18 +62,15 @@ export default {
         /**
          * --- PROPS >> GET THE ARTICLES DIRECTLY
          */
-        // TODO
-
-        this.$store.dispatch('getArticles', this.mod)
+        this.$store.dispatch('asyncNewsRequest', this.mod)
           .then(res => {
-            console.log('test res articles: ', res)
             this.loading = false
           })
           .catch(err => {
             console.log(err.message)
             this.loading = false
-            this.success = err.response.data.success
-            this.message = err.response.data.message
+            this.success = false
+            this.message = err.message
           })
       }
     }

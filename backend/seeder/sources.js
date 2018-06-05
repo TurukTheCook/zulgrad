@@ -1258,6 +1258,6 @@ SourcesList.insertMany(sourceArray)
   .catch(err => console.log(err))
 
 let exit = () => {
-  console.log('Seeder done.')
+  console.log('Sources seeder done.')
     mongoose.disconnect()
 }

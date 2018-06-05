@@ -33,7 +33,7 @@
                   <input v-model="search" type="text" id="inputSearch" class="form-control">
                 </div>
               </div>
-              <div v-for="source in filtered" :key="source.label" class="source-card d-flex flex-column border shadow p-1 m-1">
+              <div v-for="source in filtered" :key="source._id" class="source-card d-flex flex-column border shadow p-1 m-1">
                 <div><span class="text-primary">Id:</span> {{source.label}}</div>
                 <div><span class="text-primary">Name:</span> {{source.name}}</div>
                 <a class="border border-primary cursor-pointer shadow text-center text-primary m-1" data-toggle="collapse" :data-target="'#sources'" @click="selectSource(source)">Select</a>
@@ -56,7 +56,7 @@
           <a class="btn btn-sm btn-outline-primary cursor-pointer my-2" data-toggle="collapse" :data-target="'#countries'">Show Countries List</a>
           <div class="collapse" id="countries">
             <div class="sources-wrapper d-flex flex-wrap justify-content-center">
-              <div v-for="country in countries" :key="country.name" class="source-card d-flex flex-column border shadow p-1 m-1">
+              <div v-for="country in countries" :key="country._id" class="source-card d-flex flex-column border shadow p-1 m-1">
                 <div><span class="text-primary">Code:</span> {{country.code}}</div>
                 <div><span class="text-primary">Name:</span> {{country.name}}</div>
                 <a class="border border-primary cursor-pointer shadow text-center text-primary m-1" data-toggle="collapse" :data-target="'#countries'" @click="selectCountry(country)">Select</a>
@@ -99,62 +99,6 @@ export default {
       search: '',
       sourceValue: '',
       countryValue: '',
-      countries: [
-        { code: 'ae', name: 'United Arab Emirates' },
-        { code: 'ar', name: 'Argentina' },
-        { code: 'at', name: 'Austria' },
-        { code: 'au', name: 'Australia' },
-        { code: 'be', name: 'Belgium' },
-        { code: 'bg', name: 'Bulgaria' },
-        { code: 'br', name: 'Brazil' },
-        { code: 'ca', name: 'Canada' },
-        { code: 'ch', name: 'Switzerland' },
-        { code: 'cn', name: 'China' },
-        { code: 'co', name: 'Colombia' },
-        { code: 'cu', name: 'Cuba' },
-        { code: 'cz', name: 'Czechia' },
-        { code: 'de', name: 'Germany' },
-        { code: 'eg', name: 'Egypt' },
-        { code: 'fr', name: 'France' },
-        { code: 'gb', name: 'Great Britain' },
-        { code: 'gr', name: 'Greece' },
-        { code: 'hk', name: 'Hong Kong' },
-        { code: 'hu', name: 'Hungary' },
-        { code: 'id', name: 'Indonesia' },
-        { code: 'ie', name: 'Ireland' },
-        { code: 'il', name: 'Israel' },
-        { code: 'in', name: 'India' },
-        { code: 'it', name: 'Italy' },
-        { code: 'jp', name: 'Japan' },
-        { code: 'kr', name: 'Korea' },
-        { code: 'lt', name: 'Lithuania' },
-        { code: 'lv', name: 'Latvia' },
-        { code: 'ma', name: 'Moroco' },
-        { code: 'mx', name: 'Mexico' },
-        { code: 'my', name: 'Malaysia' },
-        { code: 'ng', name: 'Nigeria' },
-        { code: 'nl', name: 'Netherlands' },
-        { code: 'no', name: 'Norway' },
-        { code: 'nz', name: 'New Zealand' },
-        { code: 'ph', name: 'Philippines' },
-        { code: 'pl', name: 'Poland' },
-        { code: 'pt', name: 'Portugal' },
-        { code: 'ro', name: 'Romania' },
-        { code: 'rs', name: 'Serbia' },
-        { code: 'ru', name: 'Russian Federation' },
-        { code: 'sa', name: 'Saudi Arabia' },
-        { code: 'se', name: 'Sweden' },
-        { code: 'sg', name: 'Singapore' },
-        { code: 'si', name: 'Slovania' },
-        { code: 'sk', name: 'Slovakia' },
-        { code: 'th', name: 'Thailand' },
-        { code: 'tr', name: 'Turkey' },
-        { code: 'tw', name: 'Taiwan' },
-        { code: 'ua', name: 'Ukraine' },
-        { code: 'us', name: 'United States of America' },
-        { code: 've', name: 'Venezuela' },
-        { code: 'za', name: 'South Africa' } 
-      ],
       newModule: {
         args: {}
       }
@@ -163,6 +107,9 @@ export default {
   computed: {
     filtered() {
       return this.$store.getters.filteredSources(this.search)
+    },
+    countries() {
+      return this.$store.getters.countries
     }
   },
   methods: {
@@ -173,25 +120,28 @@ export default {
           args: {}
         }
       }
+      let mod = data.module
+
       if (this.newModule.label == 'source') {
-        data.module.label = 'source'
-        data.module.args.source = this.newModule.args.source
+        mod.label = 'source'
+        mod.args.source = this.newModule.args.source
       } else {
-        data.module.label = 'countcat'
-        data.module.args.country = this.newModule.args.country
-        data.module.args.category = this.newModule.args.category
+        mod.label = 'countcat'
+        mod.args.country = this.newModule.args.country
+        mod.args.category = this.newModule.args.category
       }
-      data.module.name = this.newModule.name
-      http.post('modules', data)
+      mod.name = this.newModule.name
+
+      this.$store.dispatch('asyncAddModule', data)
         .then(res => {
+          this.calling = false
           this.success = res.data.success
           this.message = res.data.message
-          this.calling = false
         })
         .catch(err => {
           this.calling = false
-          this.success = err.response.data.success
-          this.message = err.response.data.message
+          this.success = false
+          this.message = err.message
         })
     },
     selectSource(source) {
@@ -203,14 +153,22 @@ export default {
       this.countryValue = country.name
     },
     fetchData() {
-      this.$store.dispatch('getSources')
+      this.$store.dispatch('asyncGetSources')
         .then(res => {
-          this.loading = false
+          this.$store.dispatch('asyncGetCountries')
+            .then(res => {
+              this.loading = false
+            })
+            .catch(err => {
+              this.loading = false
+              this.success = false
+              this.message = err.message
+            })
         })
         .catch(err => {
           this.loading = false
-          this.success = err.response.data.success
-          this.message = err.response.data.message
+          this.success = false
+          this.message = err.message
         })
     }
   },

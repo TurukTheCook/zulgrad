@@ -7,12 +7,14 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     sources: [],
+    countries: [],
     groups: [],
     articles: [],
     module: {}
   },
   getters: {
     sources: (state) => state.sources,
+    countries: (state) => state.countries,
     filteredSources: (state) => {
       return keyword => state.sources.filter((source) => {
         return source.label.match(keyword) || source.label.match(keyword) || source.language.match(keyword)
@@ -27,6 +29,9 @@ const store = new Vuex.Store({
     setSources: (state, sources) => {
       state.sources = sources
     },
+    setCountries: (state, countries) => {
+      state.countries = countries
+    },
     setGroups: (state, groups) => {
       state.groups = groups
     },
@@ -35,7 +40,7 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    getSources: (context) => {
+    asyncGetSources: (context) => {
       return new Promise((resolve, reject) => {
         http.get('sources')
           .then (res => {
@@ -43,12 +48,23 @@ const store = new Vuex.Store({
             resolve(res)
           })
           .catch(err => {
-            console.log('store getsources err: ', err.response.data.message)
             reject(err)
           })
       })
     },
-    getGroups: (context) => {
+    asyncGetCountries: (context) => {
+      return new Promise((resolve, reject) => {
+        http.get('countries')
+          .then (res => {
+            context.commit('setCountries', res.data.content)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    asyncGetGroups: (context) => {
       return new Promise((resolve, reject) => {
         http.get('groups')
           .then(res => {
@@ -56,12 +72,11 @@ const store = new Vuex.Store({
             resolve(res)
           })
           .catch(err => {
-            console.log('store getgroups err: ', err.response.data.message)
             reject(err)
           })
       })
     },
-    getArticles: (context, data) => {
+    asyncNewsRequest: (context, data) => {
       return new Promise((resolve, reject) => {
         http.post('/requests', data)
           .then(res => {
@@ -69,7 +84,18 @@ const store = new Vuex.Store({
             resolve(res)
           })
           .catch(err => {
-            console.log('store getarticles err: ', err.response.data.message)
+            reject(err)
+          })
+      })
+    },
+    asyncAddModule: (context, data) => {
+      return new Promise((resolve, reject) => {
+        http.post('/modules', data)
+          .then(res => {
+            context.commit('setGroups', res.data.content.groups)
+            resolve(res)
+          })
+          .catch(err => {
             reject(err)
           })
       })

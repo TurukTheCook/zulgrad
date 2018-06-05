@@ -45,19 +45,19 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('getGroups')
+      this.$store.dispatch('asyncGetGroups')
         .then(res => {
           this.loading = false
         })
         .catch(err => {
           this.loading = false
-          this.success = err.response.data.success
-          this.message = err.response.data.message
+          this.success = false
+          this.message = err.message
         })
     }
   },
   created() {
-    if (!this.getGroups) {
+    if (!this.groups) {
       this.fetchData()
     } else this.loading = false
   }

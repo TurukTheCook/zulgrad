@@ -9,6 +9,9 @@ router.route('/requests')
 router.route('/sources')
   .get(newsRequests.sources)
 
+router.route('/countries')
+  .get(newsRequests.countries)
+
 // router.route('/requests/:id')
 //   .get(newsRequests.readOne)
 //   .delete(newsRequests.del)

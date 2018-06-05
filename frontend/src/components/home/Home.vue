@@ -114,9 +114,8 @@ export default {
       this.$router.push({name: 'welcome'})
     },
     fetchData() {
-      this.$store.dispatch('getGroups')
+      this.$store.dispatch('asyncGetGroups')
         .then(res => {
-          console.log('test res home :', res)
           let firstList = this.groups[0]
           let firstModule = firstList.modules[0]
           if (firstModule) {
@@ -128,31 +127,10 @@ export default {
         })
         .catch(err => {
           this.loading = false
-          this.success = err.response.data.success
-          this.message = err.response.data.message
+          this.success = false
+          this.message = err.message
         })
     }
-    // fetchData() {
-    //   http.get('groups')
-    //     .then(res => {
-    //       this.mods = res.data.content
-    //       console.log('----- mods: ', this.mods)
-
-    //       let firstList = this.mods[0]
-    //       let firstModule = firstList.modules[0]
-    //       if (firstModule) {
-    //         this.$router.replace({name: 'modules', params: { mod: { name: firstModule.name, label: firstModule.label, args: firstModule.args } }, query: {id: firstModule._id}})
-    //       } else {
-    //         this.$router.push({name: 'news.manage', params: { groups: this.mods }})
-    //       }
-    //       this.loading = false
-    //     })
-    //     .catch(err => {
-    //       this.loading = false
-    //       this.success = err.response.data.success
-    //       this.message = err.response.data.message
-    //     })
-    // }
   },
   created() {
     this.fetchData()
