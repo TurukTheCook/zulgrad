@@ -116,6 +116,7 @@ export default {
     fetchData() {
       this.$store.dispatch('getGroups')
         .then(res => {
+          console.log('test res home :', res)
           let firstList = this.groups[0]
           let firstModule = firstList.modules[0]
           if (firstModule) {

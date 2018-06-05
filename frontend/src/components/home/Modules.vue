@@ -19,6 +19,7 @@ import ErrorComponent from './../ErrorComponent'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import http from '../../helpers/http.js'
 import moment from 'moment'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Modules',
@@ -37,9 +38,11 @@ export default {
     return {
       success: true,
       loading: true,
-      message: 'An error occurred..',
-      articles: []
+      message: 'An error occurred..'
     }
+  },
+  computed: {
+    ...mapGetters(['articles'])
   },
   methods: {
     fetchData() {
@@ -61,11 +64,10 @@ export default {
          */
         // TODO
 
-        http.post('/requests', this.mod)
+        this.$store.dispatch('getArticles', this.mod)
           .then(res => {
-            this.articles = res.data.content
+            console.log('test res articles: ', res)
             this.loading = false
-            console.log(res.data.content)
           })
           .catch(err => {
             console.log(err.message)

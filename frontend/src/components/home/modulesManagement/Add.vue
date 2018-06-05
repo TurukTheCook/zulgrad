@@ -184,7 +184,6 @@ export default {
       data.module.name = this.newModule.name
       http.post('modules', data)
         .then(res => {
-          console.log('test groups: ', res.data.content)
           this.success = res.data.success
           this.message = res.data.message
           this.calling = false
