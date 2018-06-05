@@ -61,7 +61,7 @@
             </li>
           </ul>
         </nav> -->
-        <side-bar :mods="mods"></side-bar>
+        <side-bar :mods="groups"></side-bar>
         <!-- IF NEEDED, reload watch fullpath ->  :key="$route.fullPath" -->
         <router-view class="news-main-content flex-grow" :key="$route.fullPath"></router-view>
       </div>
@@ -84,6 +84,7 @@ import LoadingComponent from './../LoadingComponent'
 import ErrorComponent from './../ErrorComponent'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import http from '@/helpers/http'
+import { mapGetters } from 'vuex'
 
 export default {
   name: "Home",
@@ -101,9 +102,11 @@ export default {
     return {
       loading: true,
       success: true,
-      message: null,
-      mods: []
+      message: null
     }
+  },
+  computed: {
+    ...mapGetters(['groups'])
   },
   methods: {
     logout() {
@@ -111,17 +114,14 @@ export default {
       this.$router.push({name: 'welcome'})
     },
     fetchData() {
-      http.get('groups')
+      this.$store.dispatch('getGroups')
         .then(res => {
-          this.mods = res.data.content
-          console.log('----- mods: ', this.mods)
-
-          let firstList = this.mods[0]
+          let firstList = this.groups[0]
           let firstModule = firstList.modules[0]
           if (firstModule) {
             this.$router.replace({name: 'modules', params: { mod: { name: firstModule.name, label: firstModule.label, args: firstModule.args } }, query: {id: firstModule._id}})
           } else {
-            this.$router.push({name: 'news.manage', params: { groups: this.mods }})
+            this.$router.push({name: 'news.manage'})
           }
           this.loading = false
         })
@@ -131,6 +131,27 @@ export default {
           this.message = err.response.data.message
         })
     }
+    // fetchData() {
+    //   http.get('groups')
+    //     .then(res => {
+    //       this.mods = res.data.content
+    //       console.log('----- mods: ', this.mods)
+
+    //       let firstList = this.mods[0]
+    //       let firstModule = firstList.modules[0]
+    //       if (firstModule) {
+    //         this.$router.replace({name: 'modules', params: { mod: { name: firstModule.name, label: firstModule.label, args: firstModule.args } }, query: {id: firstModule._id}})
+    //       } else {
+    //         this.$router.push({name: 'news.manage', params: { groups: this.mods }})
+    //       }
+    //       this.loading = false
+    //     })
+    //     .catch(err => {
+    //       this.loading = false
+    //       this.success = err.response.data.success
+    //       this.message = err.response.data.message
+    //     })
+    // }
   },
   created() {
     this.fetchData()

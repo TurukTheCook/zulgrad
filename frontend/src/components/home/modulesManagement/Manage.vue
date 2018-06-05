@@ -26,10 +26,10 @@
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'modulesManage',
-  props: ['groups'],
   components: {
     FontAwesomeIcon
   },
@@ -40,11 +40,13 @@ export default {
       message: 'An error occurred..',
     }
   },
+  computed: {
+    ...mapGetters(['groups'])
+  },
   methods: {
     fetchData() {
-      http.get('groups')
+      this.$store.dispatch('getGroups')
         .then(res => {
-          this.groups = res.data.content
           this.loading = false
         })
         .catch(err => {
@@ -55,7 +57,7 @@ export default {
     }
   },
   created() {
-    if (!this.groups) {
+    if (!this.getGroups) {
       this.fetchData()
     } else this.loading = false
   }

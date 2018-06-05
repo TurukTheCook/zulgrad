@@ -33,7 +33,7 @@
                   <input v-model="search" type="text" id="inputSearch" class="form-control">
                 </div>
               </div>
-              <div v-for="source in filteredSources" :key="source.label" class="source-card d-flex flex-column border shadow p-1 m-1">
+              <div v-for="source in filtered" :key="source.label" class="source-card d-flex flex-column border shadow p-1 m-1">
                 <div><span class="text-primary">Id:</span> {{source.label}}</div>
                 <div><span class="text-primary">Name:</span> {{source.name}}</div>
                 <a class="border border-primary cursor-pointer shadow text-center text-primary m-1" data-toggle="collapse" :data-target="'#sources'" @click="selectSource(source)">Select</a>
@@ -86,6 +86,7 @@
 
 <script>
 import http from '../../../helpers/http.js'
+import store from '../../../store/index.js'
 
 export default {
   name: 'moduleAdd',
@@ -156,16 +157,12 @@ export default {
       ],
       newModule: {
         args: {}
-      },
-      sources: []
+      }
     }
   },
   computed: {
-    filteredSources: function () {
-      return this.sources.filter((source) => {
-        return source.label.match(this.search) || source.label.match(this.search) || source.language.match(this.search)
-        || source.country.match(this.search) || source.category.match(this.search)
-      });
+    filtered() {
+      return this.$store.getters.filteredSources(this.search)
     }
   },
   methods: {
@@ -187,6 +184,7 @@ export default {
       data.module.name = this.newModule.name
       http.post('modules', data)
         .then(res => {
+          console.log('test groups: ', res.data.content)
           this.success = res.data.success
           this.message = res.data.message
           this.calling = false
@@ -206,9 +204,8 @@ export default {
       this.countryValue = country.name
     },
     fetchData() {
-      http.get('sources')
+      this.$store.dispatch('getSources')
         .then(res => {
-          this.sources = res.data.content
           this.loading = false
         })
         .catch(err => {

@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import { SSL_OP_COOKIE_EXCHANGE } from 'constants'
+import store from './store'
 
 /**
  * CSS IMPORTS
@@ -113,6 +114,7 @@ fontawesome.library.add(
 export default new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 }).$mount('#app')
