@@ -32,9 +32,14 @@ export default {
    * --- READ ONE
    */
   readModule(req, res) {
-    User.findOne({_id: res.locals.user._id}).populate({path: 'modulesList', populate: {path: 'modules'}}).exec()
+    User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
       .then(user => {
-        let doc = user.modulesList.modules.id(req.params.id)
+        let doc = null
+        for (let group of user.modulesList.groups) {
+          for (let mod of group.modules) {
+            if (mod._id == req.params.id) doc = mod
+          }
+        }
         res.status(200).json({success: true, content: doc})
       })
       .catch(err => {

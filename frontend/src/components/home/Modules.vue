@@ -8,7 +8,7 @@
   </ol> -->
   <!-- TO DO -->
   <loading v-if="loading"></loading>
-  <div v-if="!loading" class="bg-secondary text-white p-3 mb-3 shadow"><h5 class="mb-0">{{mod.name}}</h5></div>
+  <div v-if="!loading" class="bg-secondary text-white p-3 mb-3 shadow"><h5 class="mb-0">{{moduleHeader}}</h5></div>
   <news-articles v-if="!loading" :articles="articles"></news-articles>
 </div>
 </template>
@@ -38,6 +38,7 @@ export default {
     return {
       success: true,
       loading: true,
+      moduleHeader: null,
       message: 'An error occurred..'
     }
   },
@@ -49,14 +50,30 @@ export default {
       if (this.$route.query.id && !this.mod) {
         /**
          * --- NO PROPS >> GET THE MODULE VIA ID
-           */
-          console.log('via query')
+         */
+          this.$store.dispatch('asyncGetModule', this.$route.query.id)
+          .then(res => {
+            this.$store.dispatch('asyncNewsRequest', this.$store.getters.module)
+              .then(res => {
+                this.moduleHeader = this.$store.getters.module.name
+                this.loading = false
+              })
+              .catch(err => {
+                this.loading = false
+                this.success = false
+                this.message = err.message
+              })
+          })
+          .catch(err => {
+            this.loading = false
+            this.success = false
+            this.message = err.message
+          })
 
-          http.get('modules/' + this.$route.query.id)
-            .then(res => {
-              console.log(res.data)
-            })
       } else if (!this.mod) {
+        /**
+         * --- NO QUERY NO PROPS >> GO ADD ONE
+         */
         this.$router.push({name: 'news.manage'})
       } else {
         /**
@@ -64,10 +81,10 @@ export default {
          */
         this.$store.dispatch('asyncNewsRequest', this.mod)
           .then(res => {
+            this.moduleHeader = this.mod.name
             this.loading = false
           })
           .catch(err => {
-            console.log(err.message)
             this.loading = false
             this.success = false
             this.message = err.message

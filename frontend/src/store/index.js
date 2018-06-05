@@ -5,6 +5,9 @@ import http from './../helpers/http'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+  /**
+   * --- STATE
+   */
   state: {
     sources: [],
     countries: [],
@@ -12,6 +15,9 @@ const store = new Vuex.Store({
     articles: [],
     module: {}
   },
+  /**
+   * --- GETTERS
+   */
   getters: {
     sources: (state) => state.sources,
     countries: (state) => state.countries,
@@ -25,6 +31,9 @@ const store = new Vuex.Store({
     articles: (state) => state.articles,
     module: (state) => state.module
   },
+  /**
+   * --- MUTATIONS
+   */
   mutations: {
     setSources: (state, sources) => {
       state.sources = sources
@@ -37,8 +46,14 @@ const store = new Vuex.Store({
     },
     setArticles: (state, articles) => {
       state.articles = articles
+    },
+    setModule: (state, mod) => {
+      state.module = mod
     }
   },
+  /**
+   * --- ACTIONS
+   */
   actions: {
     asyncGetSources: (context) => {
       return new Promise((resolve, reject) => {
@@ -78,7 +93,7 @@ const store = new Vuex.Store({
     },
     asyncNewsRequest: (context, data) => {
       return new Promise((resolve, reject) => {
-        http.post('/requests', data)
+        http.post('requests', data)
           .then(res => {
             context.commit('setArticles', res.data.content)
             resolve(res)
@@ -90,9 +105,21 @@ const store = new Vuex.Store({
     },
     asyncAddModule: (context, data) => {
       return new Promise((resolve, reject) => {
-        http.post('/modules', data)
+        http.post('modules', data)
           .then(res => {
             context.commit('setGroups', res.data.content.groups)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    asyncGetModule: (context, data) => {
+      return new Promise((resolve, reject) => {
+        http.get('modules/' + data)
+          .then(res => {
+            context.commit('setModule', res.data.content)
             resolve(res)
           })
           .catch(err => {
