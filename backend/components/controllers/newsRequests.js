@@ -27,8 +27,8 @@ export default {
     // REFACTORING
     let label = req.body.label
     let args = req.body.args
-    let oneHourOld = moment().subtract(1, 'hours')
-    let threeDaysOld = moment().subtract(3, 'days')
+    let oneHourOld = moment().subtract(1, 'hours').format('x')
+    let threeDaysOld = moment().subtract(3, 'days').format('x')
 
     NewsArticle.deleteMany({ 'publishedAt': { '$lte': threeDaysOld } }).exec()
       .then(() => {
@@ -39,22 +39,22 @@ export default {
                * --- END OF ROUTE IF OLD REQUEST (<1h)
                */
               if (requestAge == 'old') {
-                console.log('old request')
-                let finalArticles = uniqBy(optionalArticles, 'title')
-                finalArticles = sortBy(finalArticles, 'publishedAt').reverse()
+                console.log('----- old request')
+                let oldArticles = uniqBy(optionalArticles, 'title')
+                oldArticles = sortBy(oldArticles, ['publishedAt']).reverse()
                 // for (let i = 0; i < finalArticles.length; i++) {
                 //   finalArticles[i].publishedAt = moment(finalArticles[i].publishedAt, 'x').format("MMMM Do YYYY [at] HH:mm")
                 // }
-                return res.status(200).json({ success: true, message: 'List of old articles', content: finalArticles })
+                return res.status(200).json({ success: true, message: 'List of old articles', content: oldArticles })
               }
-
+              console.log('----- test')
               /**
                * --- OR CONTINUE TO NEW REQUEST
                */
               let finalGetOut = (finalArticles) => {
                 let bulkOps = []
                 for (let article of finalArticles) {
-                  // article.publishedAt = moment(article.publishedAt).format('x')
+                  article.publishedAt = Number(moment(article.publishedAt).format('x'))
                   let upsertDoc = {
                     'updateOne': {
                       'filter': { 'title': article.title },
@@ -70,13 +70,13 @@ export default {
 
                     if (optionalArticles) {
                       finalArticles = concat(finalArticles, optionalArticles)
+                      console.log('----- new request + optional articles')
                     }
-                    finalArticles = uniqBy(finalArticles, 'title')
 
                     let freshRequest = new NewsRequest({
                       'params.label': label,
                       'params.args': args,
-                      'date': moment()
+                      'date': moment().format('x')
                     })
                     // freshRequest.date = moment().format('x')
 
@@ -90,9 +90,10 @@ export default {
                      */
                     freshRequest.save()
                       .then(() => {
-                        console.log('new request')
-                        finalArticles = sortBy(finalArticles, 'publishedAt').reverse()
-                        res.status(200).json({ success: true, messages: 'List of old + new articles', content: finalArticles, length: finalArticles.length })
+                        console.log('------ new request')
+                        finalArticles = uniqBy(finalArticles, 'title')
+                        finalArticles = sortBy(finalArticles, ['publishedAt']).reverse()
+                        res.status(200).json({ success: true, messages: 'List of old + new articles', content: finalArticles })
                       })
                       .catch(err => {
                         res.status(500).json({ success: false, message: err.message })
@@ -106,7 +107,7 @@ export default {
               if (label == 'source') {
                 axios.get('https://newsapi.org/v2/top-headlines?pageSize=100&apiKey=' + process.env.NEWSAPI_KEY + '&sources=' + args.source)
                   .then(res => {
-                    console.log('did a request to api')
+                    console.log('----- api source')
                     let articles = res.data.articles
                     finalGetOut(articles)
                   })
@@ -116,7 +117,7 @@ export default {
               } else {
                 axios.get('https://newsapi.org/v2/top-headlines?pageSize=100&apiKey=' + process.env.NEWSAPI_KEY + '&country=' + args.country + '&category=' + args.category)
                   .then(res => {
-                    console.log('did a request to api')
+                    console.log('----- api countcat')
                     let articles = res.data.articles
                     finalGetOut(articles)
                   })
@@ -128,7 +129,7 @@ export default {
             } // end of getOut()
 
             if (results[0]) {
-              let sortedResults = sortBy(results, 'date').reverse()
+              let sortedResults = sortBy(results, ['date']).reverse()
               let finalArticlesArray = []
               for (let request of sortedResults) {
                 for (let article of request.articles) {

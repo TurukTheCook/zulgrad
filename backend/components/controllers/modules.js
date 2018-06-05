@@ -51,18 +51,15 @@ export default {
     // TODO
     User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
       .then(user => {
-        console.log('-------- USER: ', user)
-        console.log('-------- GROUP BEFORE: ', user.modulesList.groups)
         let nogroup = find(user.modulesList.groups, (obj) => { return obj.name == 'No Group'})
         if (req.body.groupId) {
           user.modulesList.groups.id(req.body.groupId).push(req.body.module)
         } else {
           user.modulesList.groups.id(nogroup._id).modules.push(req.body.module)
         }
-        console.log('-------- GROUP AFTER: ', user.modulesList.groups)
         user.modulesList.save()
           .then(result => {
-            res.status(200).json({ success: true, message: 'Module added with success !' })
+            res.status(200).json({ success: true, message: 'Module added with success !', content: result })
           })
           .catch(err => {
             res.status(500).json({ success: false, message: err.message })

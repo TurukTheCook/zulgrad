@@ -189,9 +189,6 @@ export default {
         .then(res => {
           this.success = res.data.success
           this.message = res.data.message
-          setTimeout(() => {
-            this.$router.go({path: '/home'})
-          }, 1000);
           this.calling = false
         })
         .catch(err => {

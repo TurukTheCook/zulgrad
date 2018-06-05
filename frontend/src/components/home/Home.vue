@@ -29,18 +29,18 @@
     </nav>
     <main class="container d-flex my-3">
       <div class="news-container-inner navbar-expand-md d-flex flex-row align-items-start justify-content-around w-100 mx-auto">
-        <div class="collapse navbar-collapse mr-3 mb-3" id="sidemenu">
+        <!-- <nav class="collapse navbar-collapse mr-3 mb-3" id="sidemenu">
           <ul class="news-side-menu nav flex-column">
             <li class="nav-item bg-secondary border">
               <router-link class="nav-link text-white link-hover-primary" :to="{name: 'news.manage', params: { groups: mods }}"><font-awesome-icon icon="cubes"/> News Modules <span class="float-right"><font-awesome-icon class="hover-primary" icon="plus-circle"/></span></router-link>
-              <div :key="$route.fullPath">
+              <div>
                 <ul class="nav flex-column">
                   <li v-for="(obj, index) in mods" :key="index" class="nav-item bg-primary">
                     <a class="nav-link text-white border cursor-pointer" data-toggle="collapse" :data-target="'#' + index">{{obj.name}}</a>
                     <div :id="index" class="collapse show">
                       <ul class="nav flex-column bg-white pl-3">
                         <li v-for="item in obj.modules" :key="item._id" class="nav-item">
-                          <router-link class="nav-link active" :to="{name: 'modules', params: { mod: { label: item.label, args: item.args } }, query: { id: item._id}}">
+                          <router-link class="nav-link active" :to="{name: 'modules', params: { mod: { name: item.name, label: item.label, args: item.args } }, query: { id: item._id}}">
                             {{item.name}}
                           </router-link>
                         </li>
@@ -60,7 +60,8 @@
               <router-link class="nav-link text-white" :to="{name: 'history'}"><font-awesome-icon icon="clock"/> History</router-link>
             </li>
           </ul>
-        </div>
+        </nav> -->
+        <side-bar :mods="mods"></side-bar>
         <!-- IF NEEDED, reload watch fullpath ->  :key="$route.fullPath" -->
         <router-view class="news-main-content flex-grow" :key="$route.fullPath"></router-view>
       </div>
@@ -79,12 +80,21 @@
 </template>
 
 <script>
+import LoadingComponent from './../LoadingComponent'
+import ErrorComponent from './../ErrorComponent'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import http from '@/helpers/http'
 
 export default {
   name: "Home",
   components: {
+    'side-bar' : () => ({
+      component: import('./Sidebar'),
+      loading: LoadingComponent,
+      error: ErrorComponent,
+      delay: 10,
+      timeout: 15000
+    }),
     FontAwesomeIcon
   },
   data() {
@@ -100,21 +110,19 @@ export default {
       localStorage.removeItem('X-Token');
       this.$router.push({name: 'welcome'})
     },
-    toModulesManage() {
-      this.$router.push({name: 'news.manage', params: { groups: this.mods }})
-    },
     fetchData() {
       http.get('groups')
         .then(res => {
           this.mods = res.data.content
+          console.log('----- mods: ', this.mods)
 
           let firstList = this.mods[0]
-          if (firstList) {
-            let firstModule = firstList.modules[0]
-            if (firstModule) {
-              this.$router.replace({name: 'modules', params: { mod: { label: firstModule.label, args: firstModule.args } }, query: {id: firstModule._id}})
-            } else this.$router.push({name: 'news.manage', params: { groups: this.mods }})
-          } 
+          let firstModule = firstList.modules[0]
+          if (firstModule) {
+            this.$router.replace({name: 'modules', params: { mod: { name: firstModule.name, label: firstModule.label, args: firstModule.args } }, query: {id: firstModule._id}})
+          } else {
+            this.$router.push({name: 'news.manage', params: { groups: this.mods }})
+          }
           this.loading = false
         })
         .catch(err => {

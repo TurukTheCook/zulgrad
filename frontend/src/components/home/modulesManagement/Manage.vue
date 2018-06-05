@@ -1,5 +1,8 @@
 <template>
-  <div class="d-flex flex-column w-100">
+<div>
+  <div v-if="!success" class="alert alert-warning m-0 mb-2 w-100">{{message}}</div>
+  <loading v-if="loading"></loading>
+  <div v-else class="d-flex flex-column w-100">
     <div class="bg-secondary text-white p-3"><h5 class="mb-0">News Modules Management</h5></div>
     <div class="d-flex flex-wrap justify-content-center p-3 border shadow">
       <div class="modules-add d-flex flex-column justify-content-center align-items-center p-2 m-2 mb-3">
@@ -18,6 +21,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -28,6 +32,32 @@ export default {
   props: ['groups'],
   components: {
     FontAwesomeIcon
+  },
+  data() {
+    return {
+      success: true,
+      loading: true,
+      message: 'An error occurred..',
+    }
+  },
+  methods: {
+    fetchData() {
+      http.get('groups')
+        .then(res => {
+          this.groups = res.data.content
+          this.loading = false
+        })
+        .catch(err => {
+          this.loading = false
+          this.success = err.response.data.success
+          this.message = err.response.data.message
+        })
+    }
+  },
+  created() {
+    if (!this.groups) {
+      this.fetchData()
+    } else this.loading = false
   }
 }
 </script>

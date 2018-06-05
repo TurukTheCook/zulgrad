@@ -7,7 +7,7 @@ let NewsArticleSchema = new mongoose.Schema({
     description: { type: String },
     url: { type: String },
     urlToImage: { type: String },
-    publishedAt: { type: Date }
+    publishedAt: { type: Number }
   },
   { timestamps: true }
 )

@@ -38,6 +38,7 @@ const router = new Router({
     },
     {
       path: '/home',
+      name: 'home',
       component: loadComp('home/Home'),
       children: [
         {
