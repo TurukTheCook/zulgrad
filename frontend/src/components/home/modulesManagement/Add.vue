@@ -66,7 +66,7 @@
         </div>
         <div v-if="newModule.label == 'countcat'" class="form-group mb-3">
           <label for="inputCategory">Category</label>
-          <select v-model="newModule.args.category" class="form-control">
+          <select v-model="newModule.args.category" class="form-control" required>
             <option value="business">Business</option>
             <option value="entertainment">Entertainment</option>
             <option value="general" selected>General</option>
@@ -115,6 +115,25 @@ export default {
   methods: {
     addModule() {
       this.calling = true
+      /**
+       * --- ERROR VALIDATION
+       */
+      if (this.newModule.label == "source" && !this.newModule.args.source) {
+        this.calling = false
+        this.success = false
+        this.message = "Missing fields, please forget any field.."
+        return
+      }
+      if (this.newModule.label == "countcat" && (!this.newModule.args.country || !this.newModule.args.category)) {
+        this.calling = false
+        this.success = false
+        this.message = "Missing fields, please forget any field.."
+        return
+      }
+
+      /**
+       * --- VALIDATION OK
+       */
       let data = {
         module: {
           args: {}
@@ -134,9 +153,12 @@ export default {
 
       this.$store.dispatch('asyncAddModule', data)
         .then(res => {
-          this.calling = false
           this.success = res.data.success
           this.message = res.data.message
+          setTimeout(() => {
+            this.$router.push({name: 'news.manage'})
+            this.calling = false
+          }, 1500);
         })
         .catch(err => {
           this.calling = false

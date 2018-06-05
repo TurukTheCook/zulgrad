@@ -57,43 +57,48 @@ export default {
         this.calling = false
         this.success = false
         this.message = "Passwords don't match.. please try again."
+        return
+      } else if (this.newUser.password.length < 8) {
+        this.calling = false
+        this.success = false
+        this.message = "Password is not long enough, minimum 8 characters."
+        return
       }
-      else {
-        this.loading = true
-        // axios.get('https://jsonip.com')
-        // axios.get('https://api.ipify.org?format=json')
-        axios.get('http://api.ipstack.com/check?access_key=' + process.env.API_KEY + '&fields=country_code,country_name,continent_code,continent_name&language=en')
-          .then(res => {
-            let newUser = this.newUser
-            let data = {
-              country: { 
-                code: res.data.country_code,
-                name: res.data.country_name
-              },
-              continent: {
-                code: res.data.continent_code,
-                name: res.data.continent_name
-              },
-              newUser
-            };
-            http.post('signup', data)
-              .then(res => {
-                this.$router.push({ name: 'login' })
-              })
-              .catch(err => {
-                this.calling = false
-                this.loading = false
-                this.success = false
-                this.message = err.response.data.message
-              })
-          })
-          // Do not catch so registration keep going even if external api is down
-          // .catch(err => {
-          //   console.log(err)
-          //   this.calling = false
-          //   this.loading = false
-          // })
-      }
+      
+      this.loading = true
+      // axios.get('https://jsonip.com')
+      // axios.get('https://api.ipify.org?format=json')
+      axios.get('http://api.ipstack.com/check?access_key=' + process.env.API_KEY + '&fields=country_code,country_name,continent_code,continent_name&language=en')
+        .then(res => {
+          let newUser = this.newUser
+          let data = {
+            country: { 
+              code: res.data.country_code,
+              name: res.data.country_name
+            },
+            continent: {
+              code: res.data.continent_code,
+              name: res.data.continent_name
+            },
+            newUser
+          };
+          http.post('signup', data)
+            .then(res => {
+              this.$router.push({ name: 'login' })
+            })
+            .catch(err => {
+              this.calling = false
+              this.loading = false
+              this.success = false
+              this.message = err.response.data.message
+            })
+        })
+        // Do not catch so registration keep going even if external api is down
+        // .catch(err => {
+        //   console.log(err)
+        //   this.calling = false
+        //   this.loading = false
+        // })
     }
   },
   beforeMount() {

@@ -4,7 +4,8 @@
     <h5 class="news-card-header py-1 px-3"><strong>{{article.title}}</strong></h5>
     <div class="news-card-content d-flex flex-row">
       <div class="news-card-content-image pt-2 mb-2">
-        <img class="img-fluid border" v-lazy="article.urlToImage" alt="news related image">
+        <img v-if="article.urlToImage" class="img-fluid border" v-lazy="article.urlToImage" alt="news related image">
+        <img v-else class="img-fluid border" src="/static/img/image_not_found.jpg" alt="news related image">
       </div>
       <div class="news-card-content-body px-2 pb-2">
         <p class="mb-1">{{article.description}}</p>
