@@ -27,8 +27,9 @@
           </div>
       </div>
     </nav>
-    <main class="container d-flex my-3">
-      <div class="news-container-inner navbar-expand-md d-flex flex-row align-items-start justify-content-around w-100 mx-auto">
+    <main class="sidebar-wrapper container d-flex my-3 align-items-start navbar-expand-md">
+      <side-bar :mods="groups"></side-bar>
+      <div class="news-container-inner d-flex flex-row align-items-start justify-content-around w-100 mx-auto">
         <!-- <nav class="collapse navbar-collapse mr-3 mb-3" id="sidemenu">
           <ul class="news-side-menu nav flex-column">
             <li class="nav-item bg-secondary border">
@@ -61,7 +62,7 @@
             </li>
           </ul>
         </nav> -->
-        <side-bar :mods="groups"></side-bar>
+        
         <!-- IF NEEDED, reload watch fullpath ->  :key="$route.fullPath" -->
         <router-view class="news-main-content flex-grow" :key="$route.fullPath"></router-view>
       </div>

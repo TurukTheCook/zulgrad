@@ -3,13 +3,13 @@
   <ul class="news-side-menu nav flex-column">
     <li class="nav-item bg-secondary border">
       <router-link class="nav-link text-white link-hover-primary" :to="{name: 'news.manage', params: { groups: mods }}"><font-awesome-icon icon="cubes"/> News Modules <span class="float-right"><font-awesome-icon class="hover-primary" icon="plus-circle"/></span></router-link>
-      <div>
-        <ul class="nav flex-column">
+      <div class="max-50">
+        <ul class="nav flex-column nowrap">
           <li v-for="(obj, index) in mods" :key="index" class="nav-item bg-primary">
             <a class="nav-link text-white border cursor-pointer" data-toggle="collapse" :data-target="'#' + index">{{obj.name}}</a>
             <div :id="index" class="collapse show">
-              <ul class="nav flex-column bg-white pl-3">
-                <li v-for="item in obj.modules" :key="item._id" class="nav-item">
+              <ul class="nav flex-column wrap bg-white pl-3">
+                <li v-for="item in obj.modules" :key="item._id" class="nav-item wrap">
                   <router-link class="nav-link active" :to="{name: 'modules', params: { mod: { name: item.name, label: item.label, args: item.args } }, query: { id: item._id}}">
                     {{item.name}}
                   </router-link>
