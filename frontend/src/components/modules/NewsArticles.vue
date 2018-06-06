@@ -13,7 +13,7 @@
           <small class="pl-2"><cite title="Author">{{article.author}}</cite> @ <cite title="Source Title">{{article.source.name}}</cite></small><br>
           <small class="pl-2">{{moment(article.publishedAt)}}</small>
         </div>
-        <button @click="openLink(article.url)" class="btn btn-sm btn-outline-primary float-right">Read..</button>
+        <button @click="openLink(article.url, article)" class="btn btn-sm btn-outline-primary float-right" :disabled="calling">Read..</button>
       </div>
     </div>
   </div>
@@ -25,15 +25,34 @@ import moment from "moment-timezone";
 
 export default {
   name: 'NewsArticles',
-  props: ['articles'],
+  props: ['articles', 'mode'],
+  data() {
+    return {
+      calling: false
+    }
+  },
   methods: {
     moment(date) {
       let timezone = moment.tz.guess()
       return moment.tz(date, timezone).format("MMMM Do YYYY [at] HH:mm");
     },
-    openLink(url) {
+    openLink(url, data) {
+      this.calling = true
+      if (this.mode == "news") {
+        this.$store.dispatch('asyncAddHistory', data)
+          .then(res => {
+            this.calling = false
+          })
+          .catch(err => {
+            console.log('err: ', err.message)
+          })
+      }
       // window.open(url, '_blank', 'noopener')
       window.open(url, '_blank')
+
+      setTimeout(() => {
+        this.calling = false
+      }, 300);
     }
   }
 }

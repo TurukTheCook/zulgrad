@@ -13,6 +13,7 @@ const store = new Vuex.Store({
     countries: [],
     groups: [],
     articles: [],
+    history: [],
     module: {}
   },
   /**
@@ -29,6 +30,7 @@ const store = new Vuex.Store({
     },
     groups: (state) => state.groups,
     articles: (state) => state.articles,
+    history: (state) => state.history,
     module: (state) => state.module
   },
   /**
@@ -46,6 +48,9 @@ const store = new Vuex.Store({
     },
     setArticles: (state, articles) => {
       state.articles = articles
+    },
+    setHistory: (state, history) => {
+      state.history = history
     },
     setModule: (state, mod) => {
       state.module = mod
@@ -126,7 +131,33 @@ const store = new Vuex.Store({
             reject(err)
           })
       })
-    }
+    },
+    asyncGetHistory: (context) => {
+      return new Promise((resolve, reject) => {
+        http.get('history')
+          .then(res => {
+            context.commit('setHistory', res.data.content)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    asyncAddHistory: (context, data) => {
+      return new Promise((resolve, reject) => {
+        http.post('history', data)
+          .then(res => {
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    /**
+     * --- END OF ACTIONS
+     */
   }
 })
 

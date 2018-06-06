@@ -1,24 +1,16 @@
 <template>
-<div>
-  <div v-if="!success" class="alert alert-warning m-0 mb-2 w-100">{{message}}</div>
-  <!-- <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Home</a></li>
-    <li class="breadcrumb-item"><a href="#">Library</a></li>
-    <li class="breadcrumb-item active">Data</li>
-  </ol> -->
-  <!-- TO DO -->
-  <loading v-if="loading"></loading>
-  <div v-if="!loading" class="bg-secondary text-white p-3 mb-3 shadow"><h5 class="mb-0">{{moduleHeader}}</h5></div>
-  <news-articles v-if="!loading" :articles="articles"></news-articles>
-</div>
+  <div class="d-flex flex-column w-100">
+    <div v-if="!success" class="alert alert-warning m-0 mb-2 w-100">{{message}}</div>
+    <loading v-if="loading"></loading>
+    <div v-if="!loading" class="bg-secondary text-white p-3 mb-3 shadow"><h5 class="mb-0">{{moduleHeader}}</h5></div>
+    <news-articles v-if="!loading" :articles="articles" mode="news"></news-articles>
+  </div>
 </template>
 
 <script>
 import LoadingComponent from './../LoadingComponent'
 import ErrorComponent from './../ErrorComponent'
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import http from '../../helpers/http.js'
-import moment from 'moment'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -30,8 +22,7 @@ export default {
       error: ErrorComponent,
       delay: 10,
       timeout: 15000
-    }),
-    FontAwesomeIcon
+    })
   },
   props: ['mod'],
   data() {

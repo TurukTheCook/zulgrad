@@ -48,7 +48,6 @@ export default {
                 // }
                 return res.status(200).json({ success: true, message: 'List of old articles', content: oldArticles })
               }
-              console.log('----- test')
               /**
                * --- OR CONTINUE TO NEW REQUEST
                */
@@ -71,7 +70,7 @@ export default {
 
                     if (optionalArticles) {
                       finalArticles = concat(finalArticles, optionalArticles)
-                      console.log('----- new request + optional articles')
+                      console.log('----- new articles + old articles')
                     }
 
                     let freshRequest = new NewsRequest({
