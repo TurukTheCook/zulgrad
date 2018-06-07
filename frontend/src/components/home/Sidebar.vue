@@ -2,11 +2,11 @@
 <nav class="collapse navbar-collapse mr-3 mb-3" id="sidemenu">
   <ul class="news-side-menu nav flex-column">
     <li class="nav-item bg-secondary border">
-      <router-link class="nav-link text-white link-hover-primary" :to="{name: 'news.manage', params: { groups: mods }}"><font-awesome-icon icon="cubes"/> News Modules <span class="float-right"><font-awesome-icon class="hover-primary" icon="plus-circle"/></span></router-link>
+      <router-link class="nav-link text-white link-hover-primary" :to="{name: 'news.manage', params: { groups: mods }}" data-toggle="tooltip" data-placement="auto" title="Manage modules"><font-awesome-icon icon="cubes"/> News Modules <span class="float-right"><font-awesome-icon class="hover-primary" icon="plus-circle"/></span></router-link>
       <div class="max-50">
         <ul class="nav flex-column nowrap">
           <li v-for="(obj, index) in mods" :key="index" class="nav-item bg-primary">
-            <a class="nav-link text-white border cursor-pointer" data-toggle="collapse" :data-target="'#' + index">{{obj.name}}</a>
+            <a class="nav-link text-white border cursor-pointer" data-toggle="collapse" :data-target="'#' + index"><span data-toggle="tooltip" data-placement="auto" title="Click to collapse">{{obj.name}}</span></a>
             <div :id="index" class="collapse show">
               <ul class="nav flex-column wrap bg-white pl-3">
                 <li v-for="item in obj.modules" :key="item._id" class="nav-item wrap">
@@ -24,10 +24,10 @@
       </div>
     </li>
     <li class="nav-item bg-secondary border">
-      <router-link class="nav-link text-white" :to="{name: 'favs'}"><font-awesome-icon icon="star"/> Favs</router-link>
+      <router-link class="nav-link text-white" :to="{name: 'history'}"><font-awesome-icon icon="clock"/> History</router-link>
     </li>
     <li class="nav-item bg-secondary border">
-      <router-link class="nav-link text-white" :to="{name: 'history'}"><font-awesome-icon icon="clock"/> History</router-link>
+      <router-link class="nav-link text-white" :to="{name: 'favs'}"><font-awesome-icon icon="star"/> Favorites</router-link>
     </li>
   </ul>
 </nav>

@@ -62,13 +62,10 @@ export default {
         } else {
           user.modulesList.groups.id(nogroup._id).modules.push(req.body.module)
         }
-        user.modulesList.save()
-          .then(result => {
-            res.status(200).json({ success: true, message: 'Module added with success !', content: result })
-          })
-          .catch(err => {
-            res.status(500).json({ success: false, message: err.message })
-          })
+        return user.modulesList.save()
+      })
+      .then(result => {
+        res.status(200).json({ success: true, message: 'Module added with success !', content: result })
       })
       .catch(err => {
         res.status(500).json({ success: false, message: err.message })

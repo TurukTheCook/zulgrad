@@ -47,7 +47,7 @@ export default {
       http.post('login', this.logAttempt)
         .then(res => {
           localStorage.setItem('X-Token', res.data.content)
-          this.$router.push({ name: 'modules' })
+          this.$router.push({ name: 'home' })
         })
         .catch(err => {
           this.calling = false
