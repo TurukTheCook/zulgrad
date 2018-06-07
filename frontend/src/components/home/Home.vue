@@ -12,10 +12,10 @@
           <div class="d-flex flex-row collapse show" id="navbarColor02">
             <ul class="navbar-nav flex-row ml-auto">
               <li class="nav-item px-2">
-                <router-link class="nav-link link-hover-primary" :to="{name: 'profile'}" data-toggle="tooltip" data-placement="auto" title="Profile"><font-awesome-icon class="hover-primary" icon="portrait"/></router-link>
+                <router-link class="nav-link link-hover-primary" active-class="active" :to="{name: 'profile'}" data-toggle="tooltip" data-placement="auto" title="Profile"><font-awesome-icon class="hover-primary" icon="portrait"/></router-link>
               </li>
               <li class="nav-item px-2">
-                <router-link class="nav-link link-hover-primary" :to="{name: 'about'}" data-toggle="tooltip" data-placement="auto" title="About"><font-awesome-icon class="hover-primary" icon="info-circle"/></router-link>
+                <router-link class="nav-link link-hover-primary" active-class="active" :to="{name: 'about'}" data-toggle="tooltip" data-placement="auto" title="About"><font-awesome-icon class="hover-primary" icon="info-circle"/></router-link>
               </li>
               <li class="nav-item px-2">
                 <a class="nav-link link-hover-primary cursor-pointer" v-on:click.prevent="logout" data-toggle="tooltip" data-placement="auto" title="Logout"><font-awesome-icon class="hover-primary" icon="door-open"/></a>
@@ -25,7 +25,7 @@
       </div>
     </nav>
     <main class="sidebar-wrapper container d-flex my-3 align-items-start navbar-expand-md">
-      <side-bar :mods="groups"></side-bar>
+      <side-bar :groups="groups"></side-bar>
       <div class="news-container-inner d-flex flex-row align-items-start justify-content-center w-100 mx-auto">
         <!-- IF NEEDED, reload watch fullpath ->  :key="$route.fullPath" -->
         <router-view class="news-main-content flex-grow" :key="$route.fullPath"></router-view>
@@ -35,8 +35,8 @@
       <div class="container d-flex flex-column flex-sm-row justify-content-between p-2">
         <p class="p-2 mb-0">Zulgrad "The News Bringer" - <font-awesome-icon icon="copyright"/> 2018</p>
         <p class="p-2 mb-0">
-          - News delivered by <a href="https://newsapi.org/" target="_blank">NewsAPI</a><br>
-          - Cryptocurrencies prices delivered by <a href="https://coinmarketcap.com/" target="_blank">CoinMarketCap</a>
+          - Powered by <a href="https://newsapi.org/" target="_blank">NewsAPI</a><br>
+          <!-- - Cryptocurrencies prices delivered by <a href="https://coinmarketcap.com/" target="_blank">CoinMarketCap</a> -->
         </p>
       </div>
     </footer>
@@ -94,6 +94,7 @@ export default {
         this.loading = false
         this.success = false
         this.message = err.message
+        if (err.response.data.message) this.message = err.response.data.message
       })
     }
   },

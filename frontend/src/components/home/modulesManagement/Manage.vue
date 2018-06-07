@@ -12,9 +12,8 @@
       <div class="bg-secondary text-white p-3 w-100"><h5 class="mb-0">Groups Management</h5></div>
       <div class="w-100 text-center mb-3 mt-1">To remove a group or a module from a group, simply click on "edit".</div>
       <div v-for="group in groups" :key="group._id" class="modules-groups d-flex flex-column justify-content-center align-items-center p-2 m-2">
-        <h6><strong>{{group.name}}</strong></h6>
-        <!-- <p class="h1 text-primary"><font-awesome-icon icon="plus-circle"/></p> -->
-        <button class="btn btn-block btn-outline-primary" disabled>Edit</button>
+        <h6 class="my-auto"><strong>{{group.name}}</strong></h6>
+        <button class="btn btn-block btn-outline-primary" @click="editGroup(group._id)">Edit</button>
       </div>
       <div class="modules-add d-flex flex-column justify-content-center align-items-center p-2 m-2">
         <h6 class="cursor-default"><strong>Add Group</strong></h6>
@@ -54,13 +53,15 @@ export default {
         this.loading = false
         this.success = false
         this.message = err.message
+        if (err.response.data.message) this.message = err.response.data.message
       })
+    },
+    editGroup(groupId) {
+      this.$router.push({name: 'newsgroups.edit', params: {id: groupId}})
     }
   },
   created() {
-    if (!this.groups) {
-      this.fetchData()
-    } else this.loading = false
+    this.fetchData()
   }
 }
 </script>

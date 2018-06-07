@@ -13,7 +13,7 @@
         <div class="form-group mb-2">
           <label for="inputPassword"><font-awesome-icon icon="unlock-alt"/> Password</label>
           <input v-model="newUser.password" type="password" id="inputPassword" class="form-control" required>
-          <small class="text-primary">Must be longer than 8 characters</small>
+          <small class="text-primary">Must be at least 6 characters</small>
         </div>
         <div class="form-group mb-5">
           <label for="inputPasswordCheck"><font-awesome-icon icon="unlock-alt"/> Confirm Password</label>
@@ -58,10 +58,10 @@ export default {
         this.success = false
         this.message = "Passwords don't match.. please try again."
         return
-      } else if (this.newUser.password.length < 8) {
+      } else if (this.newUser.password.length < 6) {
         this.calling = false
         this.success = false
-        this.message = "Password is not long enough, minimum 8 characters."
+        this.message = "Password is not long enough, minimum 6 characters."
         return
       }
       

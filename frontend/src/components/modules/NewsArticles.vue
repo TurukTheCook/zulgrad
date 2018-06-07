@@ -44,7 +44,8 @@ export default {
             this.calling = false
           })
           .catch(err => {
-            console.log('err: ', err.message)
+            if (err.message) console.log('error: ', err.message)
+            if (err.response.data.message) console.log('error: ', err.response.data.message)
           })
       }
       // window.open(url, '_blank', 'noopener')

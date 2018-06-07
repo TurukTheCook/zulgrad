@@ -16,6 +16,7 @@ import ModulesList from '../models/user/modulesList'
  */
 export default {
   /*
+  * --- ### GROUPS ###
   * --- READ ALL GROUPS
   */
   readAllGroups(req, res) {
@@ -28,26 +29,62 @@ export default {
     })
   },
 
-  /**
-   * --- ADD ONE GROUP
-   */
-  addGroup(req, res) {
-    User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
+  /*
+  * --- READ ONE GROUP
+  */
+  readGroup(req, res) {
+    User.findOne({_id: res.locals.user._id}).populate({path: 'modulesList'}).exec()
     .then(user => {
-      req.body.name = truncate(req.body.name, {length: '50', 'separator': /,? +/})
-      user.modulesList.groups.push(req.body)
-      return user.modulesList.save()
-    })
-    .then(result => {
-      res.status(200).json({ success: true, message: 'Group added with success !', content: result })
+      let group = user.modulesList.groups.id(req.params.id)
+      res.status(200).json({success: true, content: group})
     })
     .catch(err => {
       res.status(500).json({ success: false, message: err.message })
     })
   },
 
-
   /**
+   * --- ADD ONE GROUP
+   */
+  addGroup(req, res) {
+    if (req.body && req.body.name) {
+      if (req.body.name == "No Group") return res.status(412).json({ success: false, message: "You can't add a group named 'No Group' because this is the default group."})
+    
+      User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
+      .then(user => {
+        req.body.name = truncate(req.body.name, {length: '50', 'separator': /,? +/})
+        user.modulesList.groups.push(req.body)
+        return user.modulesList.save()
+      })
+      .then(result => {
+        res.status(200).json({ success: true, message: 'Group added with success !', content: result })
+      })
+      .catch(err => {
+        res.status(500).json({ success: false, message: err.message })
+      })
+    }
+  },
+
+    /**
+   * --- DELETE ONE GROUP
+   */
+  delGroup(req, res) {
+    User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
+    .then(user => {
+        user.modulesList.groups.id(req.params.id).remove()
+      return user.modulesList.save()
+    })
+    .then(result => {
+      res.status(200).json({ success: true, message: 'Group deleted with success !', content: result })
+    })
+    .catch(err => {
+      res.status(500).json({ success: false, message: err.message })
+    })
+  },
+
+ 
+  /**
+   * --- ### MODULES ####
    * --- READ ONE MODULE
    */
   readModule(req, res) {
@@ -94,6 +131,17 @@ export default {
    * --- DELETE ONE MODULE
    */
   delModule(req, res) {
-    // TODO
+    User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
+    .then(user => {
+        user.modulesList.groups.id(req.query.groupId).modules.id(req.params.id).remove()
+      return user.modulesList.save()
+    })
+    .then(result => {
+      let groupResult = result.groups.id(req.query.groupId)
+      res.status(200).json({ success: true, message: 'Module deleted with success !', content: {groups: result, group: groupResult}})
+    })
+    .catch(err => {
+      res.status(500).json({ success: false, message: err.message })
+    })
   }
 }

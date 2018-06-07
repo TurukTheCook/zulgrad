@@ -78,7 +78,6 @@ const router = new Router({
             {
               path: '',
               name: 'news.manage',
-              props: true,
               component: loadComp('home/modulesManagement/Manage')
             },
             {
@@ -90,6 +89,11 @@ const router = new Router({
               path: 'newgroup',
               name: 'newsgroups.add',
               component: loadComp('home/modulesManagement/AddGroup')
+            },
+            {
+              path: 'editgroup/:id',
+              name: 'newsgroups.edit',
+              component: loadComp('home/modulesManagement/EditGroup')
             }
           ]
         }

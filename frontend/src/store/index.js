@@ -14,24 +14,26 @@ const store = new Vuex.Store({
     groups: [],
     articles: [],
     history: [],
-    module: {}
+    module: {},
+    group: {}
   },
   /**
    * --- GETTERS
    */
   getters: {
-    sources: (state) => state.sources,
-    countries: (state) => state.countries,
-    filteredSources: (state) => {
-      return keyword => state.sources.filter((source) => {
+    sources: state => state.sources,
+    countries: state => state.countries,
+    filteredSources: state => {
+      return keyword => state.sources.filter(source => {
         return source.label.match(keyword) || source.label.match(keyword) || source.language.match(keyword)
         || source.country.match(keyword) || source.category.match(keyword)
       })
     },
-    groups: (state) => state.groups,
-    articles: (state) => state.articles,
-    history: (state) => state.history,
-    module: (state) => state.module
+    groups: state => state.groups,
+    articles: state => state.articles,
+    history: state => state.history,
+    module: state => state.module,
+    group: state => state.group
   },
   /**
    * --- MUTATIONS
@@ -54,6 +56,9 @@ const store = new Vuex.Store({
     },
     setModule: (state, mod) => {
       state.module = mod
+    },
+    setOneGroup: (state, group) => {
+      state.group = group
     }
   },
   /**
@@ -63,7 +68,7 @@ const store = new Vuex.Store({
     /**
      * -- Sources & Countries
      */
-    asyncGetSources: (context) => {
+    asyncGetSources: context => {
       return new Promise((resolve, reject) => {
         http.get('sources')
           .then (res => {
@@ -75,7 +80,7 @@ const store = new Vuex.Store({
           })
       })
     },
-    asyncGetCountries: (context) => {
+    asyncGetCountries: context => {
       return new Promise((resolve, reject) => {
         http.get('countries')
           .then (res => {
@@ -102,11 +107,35 @@ const store = new Vuex.Store({
           })
       })
     },
-    asyncGetGroups: (context) => {
+    asyncGetGroups: context => {
       return new Promise((resolve, reject) => {
         http.get('groups')
           .then(res => {
             context.commit('setGroups', res.data.content)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    asyncGetOneGroup: (context, data) => {
+      return new Promise((resolve, reject) => {
+        http.get('groups/' + data)
+          .then(res => {
+            context.commit('setOneGroup', res.data.content)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    asyncRemoveGroup: (context, data) => {
+      return new Promise((resolve, reject) => {
+        http.delete('groups/' + data)
+          .then(res => {
+            context.commit('setGroups', res.data.content.groups)
             resolve(res)
           })
           .catch(err => {
@@ -156,10 +185,23 @@ const store = new Vuex.Store({
           })
       })
     },
+    asyncRemoveModule: (context, data) => {
+      return new Promise((resolve, reject) => {
+        http.delete('modules/' + data.moduleId + '?groupId=' + data.groupId)
+          .then(res => {
+            context.commit('setGroups', res.data.content.groups.groups)
+            context.commit('setOneGroup', res.data.content.group)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     /**
      * -- History
      */
-    asyncGetHistory: (context) => {
+    asyncGetHistory: context => {
       return new Promise((resolve, reject) => {
         http.get('history')
           .then(res => {

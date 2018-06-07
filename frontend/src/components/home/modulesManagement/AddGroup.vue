@@ -45,6 +45,12 @@ export default {
         this.message = "Missing fields, please don't forget any field.."
         return
       }
+      // if (this.newGroup.name == "No Group") {
+      //   this.calling = false
+      //   this.success = false
+      //   this.message = "You can't add a group name 'No Group' because this is the default group.."
+      //   return
+      // }
 
       /**
        * --- VALIDATION OK
@@ -65,6 +71,7 @@ export default {
         this.calling = false
         this.success = false
         this.message = err.message
+        if (err.response.data.message) this.message = err.response.data.message
       })
     }
   },

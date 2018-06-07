@@ -56,6 +56,7 @@ export default {
           this.loading = false
           this.success = false
           this.message = err.message
+          if (err.response.data.message) this.message = err.response.data.message
         })
 
       } else if (!this.mod) {
@@ -78,6 +79,7 @@ export default {
           this.loading = false
           this.success = false
           this.message = err.message
+          if (err.response.data.message) this.message = err.response.data.message
         })
       }
     }
