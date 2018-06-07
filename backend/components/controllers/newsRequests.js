@@ -75,56 +75,56 @@ export default {
           }
   
           getNews()
-            .then(newsArticles => {
-              newsResults = newsArticles.data.articles
-              let bulkOps = []
-              for (let article of newsResults) {
-                article.publishedAt = Number(moment(article.publishedAt).format('x'))
-                let upsertDoc = {
-                  'updateOne': {
-                    'filter': { 'title': article.title },
-                    'update': article,
-                    'upsert': true
-                  }
-                };
-                bulkOps.push(upsertDoc);
-              }
-              return NewsArticle.collection.bulkWrite(bulkOps)
+          .then(newsArticles => {
+            newsResults = newsArticles.data.articles
+            let bulkOps = []
+            for (let article of newsResults) {
+              article.publishedAt = Number(moment(article.publishedAt).format('x'))
+              let upsertDoc = {
+                'updateOne': {
+                  'filter': { 'title': article.title },
+                  'update': article,
+                  'upsert': true
+                }
+              };
+              bulkOps.push(upsertDoc);
+            }
+            return NewsArticle.collection.bulkWrite(bulkOps)
+          })
+          .then(savedArticles => {
+            // console.log(savedArticles)
+    
+            if (finalArticlesArray[0]) {
+              newsResults = concat(newsResults, finalArticlesArray)
+              console.log('----- new articles + old articles')
+            }
+    
+            let freshRequest = new NewsRequest({
+              'params.label': label,
+              'params.args': args,
+              'date': moment().format('x')
             })
-            .then(savedArticles => {
-              // console.log(savedArticles)
-      
-              if (finalArticlesArray[0]) {
-                newsResults = concat(newsResults, finalArticlesArray)
-                console.log('----- new articles + old articles')
-              }
-      
-              let freshRequest = new NewsRequest({
-                'params.label': label,
-                'params.args': args,
-                'date': moment().format('x')
-              })
-              // freshRequest.date = moment().format('x')
-      
-              for (let key of Object.keys(savedArticles.upsertedIds)) {
-                // console.log(key, savedArticles.upsertedIds[key])
-                freshRequest.articles[key] = savedArticles.upsertedIds[key]
-              }
-              
-              /**
-               * --- END OF ROUTE IF NEW REQUEST TO API
-               */
-              return freshRequest.save()
-            })
-            .then(() => {
-              console.log('------ new request')
-              newsResults = uniqBy(newsResults, 'title')
-              newsResults = sortBy(newsResults, ['publishedAt']).reverse()
-              res.status(200).json({ success: true, messages: 'List of old + new articles', content: newsResults })
-            })
-            .catch(err => {
-              res.status(500).json({ success: false, message: err.message })
-            })
+            // freshRequest.date = moment().format('x')
+    
+            for (let key of Object.keys(savedArticles.upsertedIds)) {
+              // console.log(key, savedArticles.upsertedIds[key])
+              freshRequest.articles[key] = savedArticles.upsertedIds[key]
+            }
+            
+            /**
+             * --- END OF ROUTE IF NEW REQUEST TO API
+             */
+            return freshRequest.save()
+          })
+          .then(() => {
+            console.log('------ new request')
+            newsResults = uniqBy(newsResults, 'title')
+            newsResults = sortBy(newsResults, ['publishedAt']).reverse()
+            res.status(200).json({ success: true, messages: 'List of old + new articles', content: newsResults })
+          })
+          .catch(err => {
+            res.status(500).json({ success: false, message: err.message })
+          })
         }
       })
       .catch(err => {
@@ -153,10 +153,10 @@ export default {
    */
   sources(req, res) {
     SourcesList.find({}).exec()
-      .then(results => {
-        res.status(200).json({success: true, content: results})
-      })
-      .catch(err => res.status(500).json({ success: false, message: err.message }))
+    .then(results => {
+      res.status(200).json({success: true, content: results})
+    })
+    .catch(err => res.status(500).json({ success: false, message: err.message }))
   },
 
   /**
@@ -164,9 +164,9 @@ export default {
    */
   countries(req, res) {
     CountriesList.find({}).exec()
-      .then(results => {
-        res.status(200).json({success: true, content: results})
-      })
-      .catch(err => res.status(500).json({ success: false, message: err.message }))
+    .then(results => {
+      res.status(200).json({success: true, content: results})
+    })
+    .catch(err => res.status(500).json({ success: false, message: err.message }))
   }
 }

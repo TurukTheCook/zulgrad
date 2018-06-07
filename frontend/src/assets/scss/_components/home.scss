@@ -39,6 +39,9 @@
 
   &  ul {
     flex: 1;
+    & li.wrap:hover {
+      background-color: rgb(250, 250, 250)
+    }
   }
 
   & .max-50 {

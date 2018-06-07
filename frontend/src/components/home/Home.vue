@@ -4,7 +4,7 @@
   <loading v-if="loading"></loading>
   <div v-else class="news-container d-flex flex-column">
     <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark mb-2">
-      <div class="container border-bottom">
+      <div class="container">
           <button class="navbar-toggler mb-1" type="button" data-toggle="collapse" data-target="#sidemenu" aria-controls="sidemenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -80,21 +80,21 @@ export default {
     },
     fetchData() {
       this.$store.dispatch('asyncGetGroups')
-        .then(res => {
-          // let firstList = this.groups[0]
-          // let firstModule = firstList.modules[0]
-          // if (firstModule) {
-          //   this.$router.replace({name: 'modules', params: { mod: { name: firstModule.name, label: firstModule.label, args: firstModule.args } }, query: {id: firstModule._id}})
-          // } else {
-          //   this.$router.push({name: 'news.manage'})
-          // }
-          this.loading = false
-        })
-        .catch(err => {
-          this.loading = false
-          this.success = false
-          this.message = err.message
-        })
+      .then(res => {
+        // let firstList = this.groups[0]
+        // let firstModule = firstList.modules[0]
+        // if (firstModule) {
+        //   this.$router.replace({name: 'modules', params: { mod: { name: firstModule.name, label: firstModule.label, args: firstModule.args } }, query: {id: firstModule._id}})
+        // } else {
+        //   this.$router.push({name: 'news.manage'})
+        // }
+        this.loading = false
+      })
+      .catch(err => {
+        this.loading = false
+        this.success = false
+        this.message = err.message
+      })
     }
   },
   created() {

@@ -12,7 +12,7 @@ router.route('/modules/:id')
 
 router.route('/groups')
   .get(modules.readAllGroups)
-//   .post(modules.addGroup)
+  .post(modules.addGroup)
 
 // router.route('/groups/:id')
 //   .get(modules.readGroup)

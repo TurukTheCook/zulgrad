@@ -14,6 +14,13 @@
             <input v-model="newModule.name" type="text" id="inputName" class="form-control" required autofocus>
           </div>
           <div class="form-group mb-3">
+            <label for="inputGroup">Group</label>
+            <select v-model="newModule.groupId" class="form-control" id="inputGroup" required>
+              <!-- <option value="source">Source</option> -->
+              <option v-for="group in groups" :key="group._id" :value="group._id">{{group.name}}</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
             <label for="inputLabel">Label</label>
             <select v-model="newModule.label" class="form-control" id="inputLabel" required>
               <option value="source">Source</option>
@@ -90,6 +97,7 @@
 <script>
 import http from '../../../helpers/http.js'
 import store from '../../../store/index.js'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'moduleAdd',
@@ -111,9 +119,7 @@ export default {
     filtered() {
       return this.$store.getters.filteredSources(this.search)
     },
-    countries() {
-      return this.$store.getters.countries
-    }
+    ...mapGetters(['countries', 'groups'])
   },
   methods: {
     addModule() {
@@ -121,16 +127,11 @@ export default {
       /**
        * --- ERROR VALIDATION
        */
-      if (this.newModule.label == "source" && !this.newModule.args.source) {
+      if (!this.newModule.name || !this.newModule.groupId || (this.newModule.label == "source" && !this.newModule.args.source)
+        || (this.newModule.label == "countcat" && (!this.newModule.args.country || !this.newModule.args.category))) {
         this.calling = false
         this.success = false
-        this.message = "Missing fields, please forget any field.."
-        return
-      }
-      if (this.newModule.label == "countcat" && (!this.newModule.args.country || !this.newModule.args.category)) {
-        this.calling = false
-        this.success = false
-        this.message = "Missing fields, please forget any field.."
+        this.message = "Missing fields, please don't forget any field.."
         return
       }
 
@@ -138,6 +139,7 @@ export default {
        * --- VALIDATION OK
        */
       let data = {
+        groupId: this.newModule.groupId,
         module: {
           args: {}
         }
@@ -155,19 +157,19 @@ export default {
       mod.name = this.newModule.name
 
       this.$store.dispatch('asyncAddModule', data)
-        .then(res => {
-          this.success = res.data.success
-          this.message = res.data.message
-          setTimeout(() => {
-            this.$router.push({name: 'news.manage'})
-            this.calling = false
-          }, 1500);
-        })
-        .catch(err => {
+      .then(res => {
+        this.success = res.data.success
+        this.message = res.data.message
+        setTimeout(() => {
+          this.$router.push({name: 'news.manage'})
           this.calling = false
-          this.success = false
-          this.message = err.message
-        })
+        }, 1500);
+      })
+      .catch(err => {
+        this.calling = false
+        this.success = false
+        this.message = err.message
+      })
     },
     selectSource(source) {
       this.newModule.args.source = source.label
@@ -179,17 +181,17 @@ export default {
     },
     fetchData() {
       this.$store.dispatch('asyncGetSources')
-        .then(res => {
-          return this.$store.dispatch('asyncGetCountries')
-        })
-        .then(res => {
-          this.loading = false
-        })
-        .catch(err => {
-          this.loading = false
-          this.success = false
-          this.message = err.message
-        })
+      .then(res => {
+        return this.$store.dispatch('asyncGetCountries')
+      })
+      .then(res => {
+        this.loading = false
+      })
+      .catch(err => {
+        this.loading = false
+        this.success = false
+        this.message = err.message
+      })
     }
   },
   created() {

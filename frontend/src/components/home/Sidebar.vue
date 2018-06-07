@@ -8,9 +8,9 @@
           <li v-for="(obj, index) in mods" :key="index" class="nav-item bg-primary">
             <a class="nav-link text-white border cursor-pointer" data-toggle="collapse" :data-target="'#' + index"><span data-toggle="tooltip" data-placement="auto" title="Click to collapse">{{obj.name}}</span></a>
             <div :id="index" class="collapse show">
-              <ul class="nav flex-column wrap bg-white pl-3">
-                <li v-for="item in obj.modules" :key="item._id" class="nav-item wrap">
-                  <router-link class="nav-link active" :to="{name: 'modules', params: { mod: { name: item.name, label: item.label, args: item.args } }, query: { id: item._id}}">
+              <ul class="nav flex-column wrap bg-white">
+                <li v-for="item in obj.modules" :key="item._id" class="nav-item wrap border-bottom">
+                  <router-link class="nav-link text-dark" :to="{name: 'modules', params: { mod: { name: item.name, label: item.label, args: item.args } }, query: { id: item._id}}">
                     {{item.name}}
                   </router-link>
                 </li>

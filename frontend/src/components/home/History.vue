@@ -37,14 +37,14 @@ export default {
   methods: {
     fetchData() {
       this.$store.dispatch('asyncGetHistory')
-        .then(res => {
-          this.loading = false
-        })
-        .catch(err => {
-          this.loading = false
-          this.success = false
-          this.message = err.message
-        })
+      .then(res => {
+        this.loading = false
+      })
+      .catch(err => {
+        this.loading = false
+        this.success = false
+        this.message = err.message
+      })
     }
   },
   created() {

@@ -60,6 +60,9 @@ const store = new Vuex.Store({
    * --- ACTIONS
    */
   actions: {
+    /**
+     * -- Sources & Countries
+     */
     asyncGetSources: (context) => {
       return new Promise((resolve, reject) => {
         http.get('sources')
@@ -84,6 +87,21 @@ const store = new Vuex.Store({
           })
       })
     },
+    /**
+     * -- Groups
+     */
+    asyncAddGroup: (context, data) => {
+      return new Promise((resolve, reject) => {
+        http.post('groups', data)
+          .then(res => {
+            context.commit('setGroups', res.data.content.groups)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     asyncGetGroups: (context) => {
       return new Promise((resolve, reject) => {
         http.get('groups')
@@ -96,11 +114,29 @@ const store = new Vuex.Store({
           })
       })
     },
+    /**
+     * -- News Request
+     */
     asyncNewsRequest: (context, data) => {
       return new Promise((resolve, reject) => {
         http.post('requests', data)
           .then(res => {
             context.commit('setArticles', res.data.content)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    /**
+     * -- Modules
+     */
+    asyncGetModule: (context, data) => {
+      return new Promise((resolve, reject) => {
+        http.get('modules/' + data)
+          .then(res => {
+            context.commit('setModule', res.data.content)
             resolve(res)
           })
           .catch(err => {
@@ -120,18 +156,9 @@ const store = new Vuex.Store({
           })
       })
     },
-    asyncGetModule: (context, data) => {
-      return new Promise((resolve, reject) => {
-        http.get('modules/' + data)
-          .then(res => {
-            context.commit('setModule', res.data.content)
-            resolve(res)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
-    },
+    /**
+     * -- History
+     */
     asyncGetHistory: (context) => {
       return new Promise((resolve, reject) => {
         http.get('history')

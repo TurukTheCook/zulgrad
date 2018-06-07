@@ -33,6 +33,41 @@ export default {
       newGroup: {}
     }
   },
+  methods: {
+    addGroup() {
+      this.calling = true
+      /**
+       * --- ERROR VALIDATION
+       */
+      if (!this.newGroup.name) {
+        this.calling = false
+        this.success = false
+        this.message = "Missing fields, please don't forget any field.."
+        return
+      }
+
+      /**
+       * --- VALIDATION OK
+       */
+      let data = {
+        name: this.newGroup.name
+      }
+      this.$store.dispatch('asyncAddGroup', data)
+      .then(res => {
+        this.success = true
+        this.message = res.data.message
+        setTimeout(() => {
+          this.$router.push({name: 'news.manage'})
+          this.calling = false
+        }, 1500);
+      })
+      .catch(err => {
+        this.calling = false
+        this.success = false
+        this.message = err.message
+      })
+    }
+  },
   created() {
     this.loading = false
   }

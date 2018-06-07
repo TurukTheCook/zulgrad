@@ -2,7 +2,7 @@
  * --- IMPORT STANDARDS
  */
 import mongoose from 'mongoose'
-import { uniq, find } from 'lodash'
+import { uniq, find, truncate } from 'lodash'
 import helper from './../helpers'
 
 /**
@@ -16,64 +16,82 @@ import ModulesList from '../models/user/modulesList'
  */
 export default {
   /*
-  * --- READ ALL
+  * --- READ ALL GROUPS
   */
   readAllGroups(req, res) {
     User.findOne({_id: res.locals.user._id}).populate({path: 'modulesList'}).exec()
-      .then(user => {
-        res.status(200).json({success: true, content: user.modulesList.groups})
-      })
-      .catch(err => {
-        res.status(500).json({ success: false, message: err.message })
-      })
+    .then(user => {
+      res.status(200).json({success: true, content: user.modulesList.groups})
+    })
+    .catch(err => {
+      res.status(500).json({ success: false, message: err.message })
+    })
   },
 
   /**
-   * --- READ ONE
+   * --- ADD ONE GROUP
+   */
+  addGroup(req, res) {
+    User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
+    .then(user => {
+      req.body.name = truncate(req.body.name, {length: '50', 'separator': /,? +/})
+      user.modulesList.groups.push(req.body)
+      return user.modulesList.save()
+    })
+    .then(result => {
+      res.status(200).json({ success: true, message: 'Group added with success !', content: result })
+    })
+    .catch(err => {
+      res.status(500).json({ success: false, message: err.message })
+    })
+  },
+
+
+  /**
+   * --- READ ONE MODULE
    */
   readModule(req, res) {
     User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
-      .then(user => {
-        let doc = null
-        for (let group of user.modulesList.groups) {
-          for (let mod of group.modules) {
-            if (mod._id == req.params.id) doc = mod
-          }
+    .then(user => {
+      let doc = null
+      for (let group of user.modulesList.groups) {
+        for (let mod of group.modules) {
+          if (mod._id == req.params.id) doc = mod
         }
-        res.status(200).json({success: true, content: doc})
-      })
-      .catch(err => {
-        res.status(500).json({ success: false, message: err.message })
-      })
+      }
+      res.status(200).json({success: true, content: doc})
+    })
+    .catch(err => {
+      res.status(500).json({ success: false, message: err.message })
+    })
   },
 
   /**
-   * --- ADD
+   * --- ADD ONE MODULE
    */
   addModule(req, res) {
-    // let body = req.body
-    // if (!body.name || !body.type || !body.args) return res.status(412).json({success: false, message: 'Data is missing, verify that you send the request correctly..'})
-    // TODO
     User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
-      .then(user => {
-        let nogroup = find(user.modulesList.groups, (obj) => { return obj.name == 'No Group'})
-        if (req.body.groupId) {
-          user.modulesList.groups.id(req.body.groupId).push(req.body.module)
-        } else {
-          user.modulesList.groups.id(nogroup._id).modules.push(req.body.module)
-        }
-        return user.modulesList.save()
-      })
-      .then(result => {
-        res.status(200).json({ success: true, message: 'Module added with success !', content: result })
-      })
-      .catch(err => {
-        res.status(500).json({ success: false, message: err.message })
-      })
+    .then(user => {
+      req.body.module.name = truncate(req.body.module.name, {length: '50', 'separator': /,? +/})
+      let nogroup = find(user.modulesList.groups, (obj) => { return obj.name == 'No Group'})
+
+      if (req.body.groupId) {
+        user.modulesList.groups.id(req.body.groupId).modules.push(req.body.module)
+      } else {
+        user.modulesList.groups.id(nogroup._id).modules.push(req.body.module)
+      }
+      return user.modulesList.save()
+    })
+    .then(result => {
+      res.status(200).json({ success: true, message: 'Module added with success !', content: result })
+    })
+    .catch(err => {
+      res.status(500).json({ success: false, message: err.message })
+    })
   },
 
   /**
-   * --- DELETE
+   * --- DELETE ONE MODULE
    */
   delModule(req, res) {
     // TODO

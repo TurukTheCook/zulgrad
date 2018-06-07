@@ -43,19 +43,20 @@ export default {
          * --- NO PROPS >> GET THE MODULE VIA ID
          */
         console.log('--- via query')
-          this.$store.dispatch('asyncGetModule', this.$route.query.id)
-          .then(res => {
-             return this.$store.dispatch('asyncNewsRequest', this.$store.getters.module)
-          })
-          .then(res => {
-            this.moduleHeader = this.$store.getters.module.name
-            this.loading = false
-          })
-          .catch(err => {
-            this.loading = false
-            this.success = false
-            this.message = err.message
-          })
+
+        this.$store.dispatch('asyncGetModule', this.$route.query.id)
+        .then(res => {
+            return this.$store.dispatch('asyncNewsRequest', this.$store.getters.module)
+        })
+        .then(res => {
+          this.moduleHeader = this.$store.getters.module.name
+          this.loading = false
+        })
+        .catch(err => {
+          this.loading = false
+          this.success = false
+          this.message = err.message
+        })
 
       } else if (!this.mod) {
         /**
@@ -67,16 +68,17 @@ export default {
          * --- PROPS >> GET THE ARTICLES DIRECTLY
          */
         console.log('--- via props')
+
         this.$store.dispatch('asyncNewsRequest', this.mod)
-          .then(res => {
-            this.moduleHeader = this.mod.name
-            this.loading = false
-          })
-          .catch(err => {
-            this.loading = false
-            this.success = false
-            this.message = err.message
-          })
+        .then(res => {
+          this.moduleHeader = this.mod.name
+          this.loading = false
+        })
+        .catch(err => {
+          this.loading = false
+          this.success = false
+          this.message = err.message
+        })
       }
     }
   },
