@@ -1,6 +1,9 @@
 <template>
 <nav class="collapse navbar-collapse mr-3 mb-3" id="sidemenu">
   <ul class="news-side-menu nav flex-column">
+    <li v-if="today" class="nav-item bg-secondary border">
+      <div class="p-1 text-center text-white cursor-default">{{today}}</div>
+    </li>
     <li class="nav-item bg-secondary border">
       <router-link class="nav-link text-white link-hover-primary" active-class="active" :to="{name: 'news.manage'}" data-toggle="tooltip" data-placement="auto" title="Manage modules">
         <font-awesome-icon icon="cubes"/> News Modules <span class="float-right"><font-awesome-icon class="hover-primary" icon="plus-circle"/></span>
@@ -40,7 +43,7 @@ import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 
 export default {
   name: "sidebar",
-  props: ['groups'],
+  props: ['groups', 'today'],
   components: {
     FontAwesomeIcon
   },

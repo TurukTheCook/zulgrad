@@ -52,11 +52,15 @@ export default {
     
       User.findOne({_id: res.locals.user._id}).populate('modulesList').exec()
       .then(user => {
+        // Limit total groups count to 30
+        if (user.modulesList.groups.length > 29) return false
+
         req.body.name = truncate(req.body.name, {length: '50', 'separator': /,? +/})
         user.modulesList.groups.push(req.body)
         return user.modulesList.save()
       })
       .then(result => {
+        if (result == false) return res.status(412).json({ success: false, message: 'You can only have up to 30 groups' })
         res.status(200).json({ success: true, message: 'Group added with success !', content: result })
       })
       .catch(err => {
@@ -112,6 +116,14 @@ export default {
       req.body.module.name = truncate(req.body.module.name, {length: '50', 'separator': /,? +/})
       let nogroup = find(user.modulesList.groups, (obj) => { return obj.name == 'No Group'})
 
+      // Limit total modules count to 30
+      let modulesCount = 0
+      for (let group of user.modulesList.groups) {
+        modulesCount += group.modules.length
+      }
+      if (modulesCount > 29) return false
+
+      // Continue
       if (req.body.groupId) {
         user.modulesList.groups.id(req.body.groupId).modules.push(req.body.module)
       } else {
@@ -120,6 +132,7 @@ export default {
       return user.modulesList.save()
     })
     .then(result => {
+      if (result == false) return res.status(412).json({ success: false, message: 'You can only have up to 30 modules' })
       res.status(200).json({ success: true, message: 'Module added with success !', content: result })
     })
     .catch(err => {

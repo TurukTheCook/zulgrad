@@ -28,12 +28,13 @@ export default {
     let label = req.body.label
     let args = req.body.args
     let oneHourOld = moment().subtract(30, 'minutes').format('x')
-    let threeDaysOld = moment().subtract(3, 'days').format('x')
+    let sevenDaysOld = moment().subtract(7, 'days').format('x')
     
-    NewsArticle.deleteMany({ 'publishedAt': { '$lte': threeDaysOld } }).exec()
-    .then(() => {
-      return NewsRequest.find({ 'params.label': label, 'params.args': args }).populate('articles').exec()
-    })
+    // TODO: add this to a CRON every 7 days
+    // NewsArticle.deleteMany({ 'publishedAt': { '$lte': threeDaysOld } }).exec()
+
+
+    NewsRequest.find({ 'params.label': label, 'params.args': args }).populate('articles').exec()
     .then(results => {
       let getOut = 'new'
       let sortedResults = sortBy(results, ['date']).reverse()

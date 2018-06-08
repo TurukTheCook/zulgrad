@@ -36,7 +36,7 @@ export default {
       calling: false,
       loading: true,
       success: true,
-      message: null,
+      message: 'An error occured..',
       passwordCheck: null,
       logAttempt: {}
     }
@@ -57,7 +57,7 @@ export default {
         })
     }
   },
-  beforeMount() {
+  created() {
     this.loading = false
   }
 }

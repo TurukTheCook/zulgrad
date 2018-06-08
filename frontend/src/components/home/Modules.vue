@@ -42,7 +42,6 @@ export default {
         /**
          * --- NO PROPS >> GET THE MODULE VIA ID
          */
-        console.log('--- via query')
 
         this.$store.dispatch('asyncGetModule', this.$route.query.id)
         .then(res => {
@@ -68,7 +67,6 @@ export default {
         /**
          * --- PROPS >> GET THE ARTICLES DIRECTLY
          */
-        console.log('--- via props')
 
         this.$store.dispatch('asyncNewsRequest', this.mod)
         .then(res => {

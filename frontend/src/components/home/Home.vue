@@ -25,7 +25,7 @@
       </div>
     </nav>
     <main class="sidebar-wrapper container d-flex my-3 align-items-start navbar-expand-md">
-      <side-bar :groups="groups"></side-bar>
+      <side-bar :groups="groups" :today="today"></side-bar>
       <div class="news-container-inner d-flex flex-row align-items-start justify-content-center w-100 mx-auto">
         <!-- IF NEEDED, reload watch fullpath ->  :key="$route.fullPath" -->
         <router-view class="news-main-content flex-grow" :key="$route.fullPath"></router-view>
@@ -50,6 +50,7 @@ import ErrorComponent from './../ErrorComponent'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import http from '@/helpers/http'
 import { mapGetters } from 'vuex'
+import moment from "moment-timezone"
 
 export default {
   name: "Home",
@@ -67,7 +68,8 @@ export default {
     return {
       loading: true,
       success: true,
-      message: null
+      message: null,
+      today: null
     }
   },
   computed: {
@@ -77,6 +79,10 @@ export default {
     logout() {
       localStorage.removeItem('X-Token');
       this.$router.push({name: 'welcome'})
+    },
+    moment() {
+      let timezone = moment.tz.guess()
+      this.today = moment.tz(timezone).format("MMMM Do YYYY");
     },
     fetchData() {
       this.$store.dispatch('asyncGetGroups')
@@ -100,6 +106,7 @@ export default {
   },
   created() {
     this.fetchData()
+    this.moment()
   }
 };
 </script>
