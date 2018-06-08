@@ -5,7 +5,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import jwt from 'jsonwebtoken'
-import morgan from 'morgan'
+// import morgan from 'morgan'
 import dotEnv from 'dotenv'
 
 /**
@@ -32,10 +32,10 @@ let app = express();
 /**
  * EXTERNAL MIDDLEWARES
  */
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 app.use( (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Origin', 'https://zulgrad.com')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   res.header("Access-Control-Allow-Headers", 'Origin, X-Requested-With, Authorization, Content-Type, Accept')
   res.header('Access-Control-Max-Age', '86400')
@@ -49,6 +49,9 @@ app.use(bodyParser.json())
 /**
  * API PREFIX, AUTH VERIFICATION, 404 REDIRECT
  */
+app.use('/', (req, res, next) => {
+  res.status(200).send('Zulgrad API')
+})
 app.use('/api', auth)
 app.use(verifyToken)
 app.use(api)
@@ -63,7 +66,7 @@ mongoose.Promise = global.Promise
 mongoose.connect(process.env.MONGO_URL, {}, (err) => {
   if (err) { throw err; }
   else {
-    let port = process.env.PORT || 1407;
+    let port = process.env.PORT || 5000;
     console.log('Connection to the Database etablished...')
     app.listen(port, () => console.log('App listening on port: ' + port))
   }

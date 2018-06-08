@@ -1,5 +1,10 @@
+require('babel-polyfill');
 require('babel-register')({
-  presets: ['es2015']
-});
+  presets:[['env', {
+			"targets": {
+        	"node": "current"
+      		}
+		}]]
+})
 
-require('./index');
+require('./index')
