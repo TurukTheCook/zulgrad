@@ -53,14 +53,14 @@ app.use(bodyParser.json())
 /**
  * API PREFIX, AUTH VERIFICATION, 404 REDIRECT
  */
-app.use('/', (req, res, next) => {
-  res.status(200).send('Zulgrad API')
-})
 app.use('/api', auth)
 app.use(verifyToken)
 app.use(api)
 app.use('/*', (req, res) => {
   res.status(404).json({ success: false, message: 'This route does not exists.'})
+})
+app.use('/', (req, res, next) => {
+  res.status(200).send('Zulgrad API')
 })
 
 /**
