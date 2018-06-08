@@ -35,7 +35,11 @@ let app = express();
 // app.use(morgan('dev'))
 
 app.use( (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://zulgrad.com')
+  let allowedOrigins = ['https://zulgrad.com', 'https://www.zulgrad.com'];
+  let origin = req.headers.origin;
+  if(allowedOrigins.indexOf(origin) > -1){
+       res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   res.header("Access-Control-Allow-Headers", 'Origin, X-Requested-With, Authorization, Content-Type, Accept')
   res.header('Access-Control-Max-Age', '86400')
