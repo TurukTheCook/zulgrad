@@ -8,7 +8,7 @@ let UserSchema = new mongoose.Schema(
     modulesList: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'ModulesList' },
     historyList: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'HistoryList' },
     favsList: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'FavsList' },
-    stats: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Stats' }
+    // stats: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Stats' }
   },
   { timestamps: true }
 );

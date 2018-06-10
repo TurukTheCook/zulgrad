@@ -23,7 +23,8 @@
         <div class="form-check mb-5">
             <label class="form-check-label" for="inputTOSCheck"><input v-model="tosPrivacy" type="checkbox" id="inputTOSCheck" class="form-check-input" required> By continuing, you agree to the <a href="static/tos-privacy.html" target="_blank" rel="noopener">Terms of Service and Privacy Policy.</a></label>
         </div>
-        <div v-if="!success" class="alert alert-warning m-0 mb-2 w-100">{{message}}</div>
+        <div v-if="success == false" class="alert alert-warning m-0 mb-2 w-100">{{message}}</div>
+        <div v-if="success == true" class="alert alert-success m-0 mb-2 w-100">{{message}}</div>
         <button class="btn btn-lg btn-outline-primary btn-block mb-2" type="submit" :disabled="calling">Register</button>
         <p class="text-center text-muted">Already have an account ? <router-link :to="{name: 'login'}">Sign in</router-link></p>
       </form>
@@ -47,7 +48,7 @@ export default {
       registerBrand: 'static/img/zulgrad-register-compressed.jpg',
       calling: false,
       loading: true,
-      success: true,
+      success: null,
       message: 'An error occured..',
       passwordCheck: null,
       tosPrivacy: null,
@@ -57,6 +58,7 @@ export default {
   methods: {
     register() {
       this.calling = true
+
       if (this.newUser.password != this.passwordCheck) {
         this.calling = false
         this.success = false
@@ -76,42 +78,23 @@ export default {
       }
       
       this.loading = true
-      // axios.get('https://jsonip.com')
-      // axios.get('https://api.ipify.org?format=json')
-      axios.get('https://api.ipstack.com/check?access_key=' + process.env.API_KEY + '&fields=country_code,country_name,continent_code,continent_name&language=en')
-        .then(res => {
-          let newUser = this.newUser
-          let data = {
-            country: { 
-              code: res.data.country_code,
-              name: res.data.country_name
-            },
-            continent: {
-              code: res.data.continent_code,
-              name: res.data.continent_name
-            },
-            newUser
-          };
-          http.post('signup', data)
-            .then(res => {
-              this.$router.push({ name: 'login' })
-            })
-            .catch(err => {
-              this.calling = false
-              this.loading = false
-              this.success = false
-              this.message = err.message
-              if (err.response.data.message) this.message = err.response.data.message
-            })
-        })
-        // hum
-        .catch(err => {
+      // axios.get('https://api.ipstack.com/check?access_key=' + process.env.API_KEY + '&fields=country_code,country_name,continent_code,continent_name&language=en')
+      http.post('signup', this.newUser)
+      .then(res => {
+        this.success = res.data.success
+        this.message = res.data.message
+        setTimeout(() => {
+          this.$router.push({ name: 'login' })
           this.calling = false
-          this.loading = false
-          this.success = false
-          this.message = err.message
-          if (err.response.data.message) this.message = err.response.data.message
-        })
+        }, 1500);
+      })
+      .catch(err => {
+        this.calling = false
+        this.loading = false
+        this.success = false
+        this.message = err.message
+        if (err.response.data.message) this.message = err.response.data.message
+      })
     }
   },
   created() {

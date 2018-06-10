@@ -1,44 +1,47 @@
 /**
- * BASIC IMPORTS
+ * --- BASIC IMPORTS
  */
 import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import jwt from 'jsonwebtoken'
-// import morgan from 'morgan'
 import dotEnv from 'dotenv'
 
 /**
- * Init .env
+ * --- Init .env
  */
 dotEnv.config()
 
 /**
- * Routes Imports
+ * --- Routes Imports
  */
 import auth from './components/routes/auth'
 import api from './components/routes/api'
 
 /**
- * Middleware Imports
+ * --- Middleware Imports
  */
 import verifyToken from './components/middlewares/verifyToken'
 
 /**
- * APP INIT
+ * --- APP INIT
  */
 let app = express();
 
 /**
- * EXTERNAL MIDDLEWARES
+ * --- MORGAN FOR DEV ENV
  */
+// import morgan from 'morgan'
 // app.use(morgan('dev'))
 
+/**
+ * --- EXTERNAL MIDDLEWARES
+ */
 app.use( (req, res, next) => {
-  let allowedOrigins = ['https://zulgrad.com', 'https://www.zulgrad.com'];
-  let origin = req.headers.origin;
+  let allowedOrigins = ['https://zulgrad.com', 'https://www.zulgrad.com']
+  let origin = req.headers.origin
   if(allowedOrigins.indexOf(origin) > -1){
-       res.setHeader('Access-Control-Allow-Origin', origin);
+       res.setHeader('Access-Control-Allow-Origin', origin)
   }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   res.header("Access-Control-Allow-Headers", 'Origin, X-Requested-With, Authorization, Content-Type, Accept')
